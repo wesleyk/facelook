@@ -33,23 +33,18 @@ public class ServerThread extends Thread {
 			while(true){//keep accepting messages until END command is given.
 				String msg = in.readLine();
 				JSONObject o;
+				
+				//on null input, do not do anything
 				if(msg == null) {
 					out.println("exit");
 				}
-				else if(msg.indexOf("STORE") == 0){//Recognize the STORE command, store new data
-					o = new JSONObject(new JSONTokener(msg.substring(6)));
-					u.createUser(o.getString("email"), o.getString("password"), o.getString("name"));
-					out.println("successful store");
-				}
-				else if(msg.indexOf("GETUSERNAME") == 0){//Recognize the GET command, get the data
-					User thisUser = u.findUser(msg.substring(12));
-					if (thisUser == null){
-						out.println("ERROR: User does not exist!");
-					}
-					else{
-						out.println(thisUser.getName());
-					}
-				}
+				
+				/***********************************/
+				/***********************************/
+				/***** LOGIN AND REGISTRATION ******/
+				/***********************************/
+				/***********************************/
+				//LOGIN
 				else if(msg.indexOf("LOGIN") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(6)));
 					boolean t = u.authenticateUser(o.getString("email"), o.getString("password"));
@@ -61,24 +56,49 @@ public class ServerThread extends Thread {
 						out.println("LOGIN FAILED");
 					}
 				}
+				//REGISTER
 				else if(msg.indexOf("REGISTER") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(9)));
 					boolean t = u.createUser(o.getString("email"), o.getString("password"), o.getString("name"));
 					if(t) {
-						System.out.println("REGISTRATION SUCCESSFUL");
 						out.println("REGISTRATION SUCCESSFUL");
 					}
 					
 					else {
-						System.out.println("REGISTRATION FAILED");
 						out.println("REGISTRATION FAILED");
 					}
 				}
-				/*else if(msg.indexOf("CHANGE") == 0){//Recognize the CHANGE command, change the data
-					o = new JSONObject(new JSONTokener(msg.substring(7)));
-					d.changeAnimal(o.getString("username"), o.getString("animal"));
-					out.println("successful change");
-				}*/
+				
+				/***********************************/
+				/***********************************/
+				/********* FRIEND ACTIONS **********/
+				/***********************************/
+				/***********************************/
+				
+				
+				/***********************************/
+				/***********************************/
+				/****** SUBSCRIPTION ACTIONS *******/
+				/***********************************/
+				/***********************************/
+				
+				/***********************************/
+				/***********************************/
+				/**** MAKING AND VIEWING POSTS *****/
+				/***********************************/
+				/***********************************/
+				
+				//retrieve username given e-mail address
+				else if(msg.indexOf("GETUSERNAME") == 0){
+					User thisUser = u.findUser(msg.substring(12));
+					if (thisUser == null){
+						out.println("");
+					}
+					else{
+						out.println(thisUser.getName());
+					}
+				}
+				
 				else if(msg.indexOf("END") == 0){//Break out of the loop, no longer accept messages
 					out.println("closing connection");
 					break;
