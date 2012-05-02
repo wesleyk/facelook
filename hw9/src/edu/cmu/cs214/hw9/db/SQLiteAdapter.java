@@ -15,8 +15,13 @@ public class SQLiteAdapter {
 		Statement stat;
 		try {
 			stat = conn.createStatement();
-												//Table name			//field				//field			  //field               //field
-			stat.executeUpdate("CREATE TABLE " + Constants.USERS_TABLE + " (id integer PRIMARY KEY, email varchar(50), name varchar(50), password varchar(50));");
+			
+			// Create the four tables: users, posts, friends, and subscriptions
+			stat.executeUpdate("CREATE TABLE " + Constants.USERS_TABLE + " (email varchar(50) PRIMARY KEY, name varchar(50), password varchar(50));");
+			stat.executeUpdate("CREATE TABLE " + Constants.POSTS_TABLE + " (email varchar(50) PRIMARY KEY, content varchar(200), is_post boolean, date_added date());");
+			stat.executeUpdate("CREATE TABLE " + Constants.FRIENDS_TABLE + " (email1 varchar(50) PRIMARY KEY, email2 varchar(50));");
+			stat.executeUpdate("CREATE TABLE " + Constants.SUBSCRIPTIONS_TABLE + " (email1 varchar(50) PRIMARY KEY, email2 varchar(50));");
+			
 			
 			/*PreparedStatement ps;
 			String statement = "INSERT INTO " + Constants.USERS_TABLE + " (email, password, name) VALUES (?, ?, ?)";

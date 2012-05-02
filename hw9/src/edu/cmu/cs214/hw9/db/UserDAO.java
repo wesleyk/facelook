@@ -17,7 +17,7 @@ public class UserDAO extends SQLiteAdapter {
 		
 		try {
 			while(rs.next()){
-				ret.add(new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"), rs.getString("name")));
+				ret.add(new User(rs.getString("email"), rs.getString("password"), rs.getString("name")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -43,7 +43,7 @@ public class UserDAO extends SQLiteAdapter {
 				System.out.println("user not found in database (in User.DAO.java)");
 				return null;
 			}
-			ret = new User(rs.getInt("id"), rs.getString("email"), rs.getString("password"), rs.getString("name"));
+			ret = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
