@@ -9,19 +9,22 @@ import java.util.ArrayList;
 import json.JSONObject;
 import json.JSONTokener;
 
+import edu.cmu.cs214.hw9.db.FriendsDAO;
 import edu.cmu.cs214.hw9.db.User;
 import edu.cmu.cs214.hw9.db.UserDAO;
 
 public class ServerThread extends Thread {
 	private Socket mySocket;
 	private UserDAO u;
-	public ServerThread(Socket s, UserDAO u2) throws Exception {
+	private FriendsDAO f;
+	public ServerThread(Socket s, UserDAO u, FriendsDAO f) throws Exception {
 		if (s == null) {
 			throw new NullPointerException();
 		}
 		mySocket = s;
 		mySocket.setSoTimeout(600000);
-		this.u = u2;
+		this.u = u;
+		this.f = f;
 	}
 	
 	public void run(){
@@ -74,7 +77,34 @@ public class ServerThread extends Thread {
 				/********* FRIEND ACTIONS **********/
 				/***********************************/
 				/***********************************/
+				else if(msg.indexOf("ADDFRIEND") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(10)));
+					boolean t = f.addFriend(o.getString("emailAdding"), o.getString("emailAdded"));
+					if(t) {
+						out.println("ADDING SUCCESSFUL");
+					}
+					
+					else {
+						out.println("ADDING FAILED");
+					}
+				}
+
+				else if(msg.indexOf("ACCEPTFRIEND") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(13)));
+					boolean t = f.acceptFriend(o.getString("emailAccepting"), o.getString("emailAccepted"));
+					if(t) {
+						out.println("ACCEPTING SUCCESSFUL");
+					}
+					
+					else {
+						out.println("ACCEPTING FAILED");
+					}
+				}
 				
+				else if(msg.indexOf("LISTFRIENDS") == 0){
+					String list = f.listFriends(msg.substring(12));
+					out.println(list);
+				}
 				
 				/***********************************/
 				/***********************************/
@@ -88,6 +118,11 @@ public class ServerThread extends Thread {
 				/***********************************/
 				/***********************************/
 				
+				/***********************************/
+				/***********************************/
+				/********** USER ACTIONS ***********/
+				/***********************************/
+				/***********************************/				
 				//retrieve username given e-mail address
 				else if(msg.indexOf("GETUSERNAME") == 0){
 					User thisUser = u.findUser(msg.substring(12));
