@@ -83,11 +83,11 @@ public class ProfilePanel extends JPanel {
 				// TODO FILL IN CODE TO ADD/REMOVE FRIEND
 				if(FriendController.modifyFriend(emailName, emailUser)){
 					
-					JOptionPane.showMessageDialog(null, "Added/Removed user as friend");
+					JOptionPane.showMessageDialog(null, "Added/Removed user as friend.");
 				}
 				else{
 					
-					JOptionPane.showMessageDialog(null, "Error: Cannot add friend");
+					JOptionPane.showMessageDialog(null, "Error: Cannot modify relationship.");
 				}
 				
 			}

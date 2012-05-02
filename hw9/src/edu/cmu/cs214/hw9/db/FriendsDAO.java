@@ -34,124 +34,74 @@ public class FriendsDAO extends SQLiteAdapter {
 	}
 	
 	/**
-	 * emailAdding is modifying friendship with emailAddedy.
+	 * emailModifying is modifying friendship with emailModified.
 	 * This applies to the Add/Remove button.
-	 * If both are friends already, the friendship is terminated.
-	 * If neither has requested the other as a friend,
-	 * then emailAdding sends a request to emailAdded.
-	 * Otherwise, behavior is undefined.
+	 * The changes affect the friends table, where bidirectional entries
+	 * are required to consider two users to be friends.
+	 * The cases are broken down as following, referring to parameter one
+	 * as user A, and parameter two as user B:
+	 * 1) User A has an existing request for User B,
+	 * but B has not yet accepted.
+	 * Then, modifyFriend(A,B) will remove that request,
+	 * and they will not be friends.
+	 * 2) User B has an existing request for User A,
+	 * but A has not yet accepted.
+	 * Then, modifyFriend(A,B) will accept that request,
+	 * and they will be friends.
+	 * 3) User A and User B have no connection at all.
+	 * Then, modifyFriend(A,B) will send a friend request to User B from User A
+	 * 4) User A and User B are friends.
+	 * Then, modifyFriend(A,B) will remove the friendship.
 	 * @param emailAdding user modifying the friend request
 	 * @param emailAdded user who is being modified with
 	 * @return whether or not the query was successful
 	 */
-	public boolean modifyFriend(String emailAdding, String emailAdded) {
-		//if they're friends already, then remove both friendships
-		if(isFriend(emailAdding, emailAdded) ||
-				isFriend(emailAdded, emailAdding)) {
-			PreparedStatement ps;
-			String statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?";
-			try{
-				ps = conn.prepareStatement(statement);
-				ps.setString(1, emailAdding);
-				ps.setString(2, emailAdded);
-				ps.executeUpdate();
-			} catch(SQLException e){
-				e.printStackTrace();
-				return false;
-			}
+	public boolean modifyFriend(String emailModifying, String emailModified) {
+		
+		PreparedStatement ps;
+		String statement;
+		
+		//if emailModifying is already friends (or is pending to) with
+		// emailModified, remove that relationship
+		if(isFriend(emailModifying, emailModified)) {
 			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?";
-			try{
-				ps = conn.prepareStatement(statement);
-				ps.setString(1, emailAdded);
-				ps.setString(2, emailAdding);
-				ps.executeUpdate();
-			} catch(SQLException e){
-				e.printStackTrace();
-				return false;
-			}
-			
-			return true;
 		}
 		
-		//else if neither are friends yet, establish the connection
-		else if(!isFriend(emailAdding, emailAdded) ||
-					!isFriend(emailAdded, emailAdding)) {
-			PreparedStatement ps;
-			String statement = "INSERT INTO " + Constants.FRIENDS_TABLE + " (email1, email2) VALUES (?, ?)";
-			try{
-				ps = conn.prepareStatement(statement);
-				ps.setString(1, emailAdding);
-				ps.setString(2, emailAdded);
-				ps.executeUpdate();
-			} catch(SQLException e){
-				e.printStackTrace();
-				return false;
-			}
-			
-			return true;
-		}
-		
-		//anything in between is currently undefined
+		//otherwise, add that relationship
 		else {
+			statement = "INSERT INTO " + Constants.FRIENDS_TABLE + " (email1, email2) VALUES (?, ?)";
+		}
+		
+		try{
+			ps = conn.prepareStatement(statement);
+			ps.setString(1, emailModifying);
+			ps.setString(2, emailModified);
+			ps.executeUpdate();
+		} catch(SQLException e){
+			e.printStackTrace();
 			return false;
 		}
+		
+		//only modify any of emailModified's relationships if there
+		// is mutual friendship. In that case, severe the tie from emailModified
+		// to emailModifying (this is the remove friend case when both are already friends)
+		if(isFriend(emailModifying, emailModified) &&
+				isFriend(emailModified, emailModifying)) {
+			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?";
+			
+			try{
+				ps = conn.prepareStatement(statement);
+				ps.setString(1, emailModified);
+				ps.setString(2, emailModifying);
+				ps.executeUpdate();
+			} catch(SQLException e){
+				e.printStackTrace();
+				return false;
+			}
+		}
+		
+		return true;
 
-	}
-	
-	/**
-	 * emailRemoving is removing emailRemoved as a friend
-	 * @param emailRemoving user doing the removing
-	 * @param emailRemoved user being removed
-	 * @return whether or not the query was successful
-	 */
-	public boolean removeFriend(String emailRemoving, String emailRemoved) {
-		//check to make sure emailRemoving is even friends with emailRemoved
-		if(!isFriend(emailRemoving, emailRemoved)) {
-			return false;
-		}
-		
-		PreparedStatement ps;
-		String statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?";
-		try{
-			ps = conn.prepareStatement(statement);
-			ps.setString(1, emailRemoving);
-			ps.setString(2, emailRemoved);
-			ps.executeUpdate();
-		} catch(SQLException e){
-			e.printStackTrace();
-			return false;
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * emailAccepting is accepting the friend request from emailAccepted
-	 * @param emailAccepting user accepting the friend request
-	 * @param emailAccepted user who sent the friend request
-	 * @return whether or not the query was successful
-	 */
-	public boolean acceptFriend(String emailAccepting, String emailAccepted) {
-		//check to make sure emailAccepted friended emailAccepting already,
-		// but emailAccepting has not friended emailAccepted
-		if(isFriend(emailAccepting, emailAccepted) ||
-				!isFriend(emailAccepted, emailAccepting)) {
-			return false;
-		}
-		
-		PreparedStatement ps;
-		String statement = "INSERT INTO " + Constants.FRIENDS_TABLE + " (email1, email2) VALUES (?, ?)";
-		try{
-			ps = conn.prepareStatement(statement);
-			ps.setString(1, emailAccepting);
-			ps.setString(2, emailAccepted);
-			ps.executeUpdate();
-		} catch(SQLException e){
-			e.printStackTrace();
-			return false;
-		}
-		
-		return true;
 	}
 	
 	/**

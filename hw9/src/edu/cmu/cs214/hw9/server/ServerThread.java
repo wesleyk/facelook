@@ -84,25 +84,13 @@ public class ServerThread extends Thread {
 				/***********************************/
 				else if(msg.indexOf("MODIFYFRIEND") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(10)));
-					boolean t = f.modifyFriend(o.getString("emailAdding"), o.getString("emailAdded"));
+					boolean t = f.modifyFriend(o.getString("emailModifying"), o.getString("emailModified"));
 					if(t) {
 						out.println("MODIFY SUCCESSFUL");
 					}
 					
 					else {
 						out.println("MODIFY FAILED");
-					}
-				}
-
-				else if(msg.indexOf("ACCEPTFRIEND") == 0){
-					o = new JSONObject(new JSONTokener(msg.substring(13)));
-					boolean t = f.acceptFriend(o.getString("emailAccepting"), o.getString("emailAccepted"));
-					if(t) {
-						out.println("ACCEPTING SUCCESSFUL");
-					}
-					
-					else {
-						out.println("ACCEPTING FAILED");
 					}
 				}
 				

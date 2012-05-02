@@ -16,6 +16,36 @@ public class FriendController {
 	private FriendController() {
 	}
 
+	public static boolean modifyFriend(String emailModifying, String emailModified){
+		
+		try{
+			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+
+			JSONWriter jsonW = new JSONWriter(out);
+			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
+			jsonW.key("emailModifying");//key
+			jsonW.value(emailModifying);//value at key
+			jsonW.key("emailModified");//key
+			jsonW.value(emailModified);//value at key
+			jsonW.endObject();//finish object
+			String message = out.toString();//creates a string serializing the object
+			
+			out.println("MODIFYFRIEND "+ message);//request the information for email
+			
+			String response = in.readLine();
+			
+			return response.contains("SUCCESS");
+			
+		}
+		catch (Exception e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
 	//want to get both friends and pending friends
 	public static ArrayList<ArrayList<String>> listFriends(String email){
 		
@@ -56,71 +86,5 @@ public class FriendController {
 		}
 		return null;
 	}
-	
-	
-	public static boolean modifyFriend(String emailAdding, String emailAdded){
-		
-		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
-			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-			JSONWriter jsonW = new JSONWriter(out);
-			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
-			jsonW.key("emailAdding");//key
-			jsonW.value(emailAdding);//value at key
-			jsonW.key("emailAdded");//key
-			jsonW.value(emailAdded);//value at key
-			jsonW.endObject();//finish object
-			String message = out.toString();//creates a string serializing the object
-			
-			out.println("MODIFYFRIEND "+ message);//request the information for email
-			
-			String response = in.readLine();
-			
-			return response.contains("SUCCESS");
-			
-		}
-		catch (Exception e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-		
-	}
-	
-	public static boolean acceptFriend(String emailAccepting, String emailAccepted){
-		
-		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
-			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-			JSONWriter jsonW = new JSONWriter(out);
-			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
-			jsonW.key("emailAccepting");//key
-			jsonW.value(emailAccepting);//value at key
-			jsonW.key("emailAccepted");//key
-			jsonW.value(emailAccepted);//value at key
-			jsonW.endObject();//finish object
-			String message = out.toString();//creates a string serializing the object
-			
-			out.println("ACCEPTFRIEND "+ message);//request the information for email
-			
-			String response = in.readLine();
-			
-			return response.contains("SUCCESS");
-			
-		}
-		catch (Exception e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return false;
-		
-		
-		
-	}
-	
 	
 }
