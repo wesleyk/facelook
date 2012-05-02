@@ -34,58 +34,47 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 	}
 	
 	/**
-	 * Add subscription to emailSubscribed for emailSubscriber
-	 * @param emailSubscriber user doing the subscribing
-	 * @param emailSubscribed user being subscribed
-	 * @return whether or not the request was succesful
+	 * Modify subscription status of emailSubscriber to emailSubscribed
+	 * @param emailSubscriber user who's either subscribing or unsubscribing
+	 * @param emailSubscribed user who's being subscribed or unsubscribed to
+	 * @return
 	 */
-	public boolean addSubscription(String emailSubscriber, String emailSubscribed) {
-		//check if emailSubscriber is already subscribed to emailSubscribed
+	public boolean modifySubscription(String emailSubscriber, String emailSubscribed) {
+		
+		//if emailSubscriber is already subscribed to emailSubscribed,
+		//	then remove the subscription
 		if(isSubscribed(emailSubscriber, emailSubscribed)) {
-			return false;
+			PreparedStatement ps;
+			String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + "WHERE email1=? AND email2=?";
+			try{
+				ps = conn.prepareStatement(statement);
+				ps.setString(1, emailSubscriber);
+				ps.setString(2, emailSubscribed);
+				ps.executeUpdate();
+			} catch(SQLException e){
+				e.printStackTrace();
+				return false;
+			}
 		}
 		
-		PreparedStatement ps;
-		String statement = "INSERT INTO " + Constants.SUBSCRIPTIONS_TABLE + " (email1, email2) VALUES (?, ?)";
-		try{
-			ps = conn.prepareStatement(statement);
-			ps.setString(1, emailSubscriber);
-			ps.setString(2, emailSubscribed);
-			ps.executeUpdate();
-		} catch(SQLException e){
-			e.printStackTrace();
-			return false;
+		//otherwise, add the subscription
+		else {
+			PreparedStatement ps;
+			String statement = "INSERT INTO " + Constants.SUBSCRIPTIONS_TABLE + " (email1, email2) VALUES (?, ?)";
+			try{
+				ps = conn.prepareStatement(statement);
+				ps.setString(1, emailSubscriber);
+				ps.setString(2, emailSubscribed);
+				ps.executeUpdate();
+			} catch(SQLException e){
+				e.printStackTrace();
+				return false;
+			}
 		}
-		
+			
 		return true;
 	}
 	
-	/**
-	 * emailRemoving is removing emailRemoved as a subscription
-	 * @param emailRemoving user doing the removing
-	 * @param emailRemoved user being removed
-	 * @return whether or not the query was successful
-	 */
-	public boolean removeSubscription(String emailRemoving, String emailRemoved) {
-		//check to make sure emailRemoving is even subscribed to emailRemoved
-		if(!isSubscribed(emailRemoving, emailRemoved)) {
-			return false;
-		}
-		
-		PreparedStatement ps;
-		String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + "WHERE email1=? AND email2=?";
-		try{
-			ps = conn.prepareStatement(statement);
-			ps.setString(1, emailRemoving);
-			ps.setString(2, emailRemoved);
-			ps.executeUpdate();
-		} catch(SQLException e){
-			e.printStackTrace();
-			return false;
-		}
-		
-		return true;
-	}
 	/**
 	 * Return list of subscriptions of the given email
 	 * @param email user id for user that list of subscriptions relates to

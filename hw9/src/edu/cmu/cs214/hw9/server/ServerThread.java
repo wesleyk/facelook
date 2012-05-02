@@ -82,15 +82,15 @@ public class ServerThread extends Thread {
 				/********* FRIEND ACTIONS **********/
 				/***********************************/
 				/***********************************/
-				else if(msg.indexOf("ADDFRIEND") == 0){
+				else if(msg.indexOf("MODIFYFRIEND") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(10)));
-					boolean t = f.addFriend(o.getString("emailAdding"), o.getString("emailAdded"));
+					boolean t = f.modifyFriend(o.getString("emailAdding"), o.getString("emailAdded"));
 					if(t) {
-						out.println("ADDING SUCCESSFUL");
+						out.println("MODIFY SUCCESSFUL");
 					}
 					
 					else {
-						out.println("ADDING FAILED");
+						out.println("MODIFY FAILED");
 					}
 				}
 
@@ -106,18 +106,6 @@ public class ServerThread extends Thread {
 					}
 				}
 				
-				else if(msg.indexOf("REMOVEFRIEND") == 0) {
-					o = new JSONObject(new JSONTokener(msg.substring(13)));
-					boolean t = f.removeFriend(o.getString("emailRemoving"), o.getString("emailRemoved"));
-					if(t) {
-						out.println("REMOVING SUCCESSFUL");
-					}
-					
-					else {
-						out.println("REMOVING FAILED");
-					}
-				}
-				
 				else if(msg.indexOf("LISTFRIENDS") == 0){
 					String list = f.listFriends(msg.substring(12));
 					out.println(list);
@@ -128,27 +116,15 @@ public class ServerThread extends Thread {
 				/****** SUBSCRIPTION ACTIONS *******/
 				/***********************************/
 				/***********************************/
-				else if(msg.indexOf("ADDSUBSCRIPTION") == 0){
-					o = new JSONObject(new JSONTokener(msg.substring(16)));
-					boolean t = s.addSubscription(o.getString("emailSubscriber"), o.getString("emailSubscribed"));
+				else if(msg.indexOf("MODIFYSUBSCRIPTION") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(19)));
+					boolean t = s.modifySubscription(o.getString("emailSubscriber"), o.getString("emailSubscribed"));
 					if(t) {
-						out.println("ADDING SUCCESSFUL");
+						out.println("MODIFY SUCCESSFUL");
 					}
 					
 					else {
-						out.println("ADDING FAILED");
-					}
-				}
-				
-				else if(msg.indexOf("REMOVESUBSCRIPTIONS") == 0) {
-					o = new JSONObject(new JSONTokener(msg.substring(20)));
-					boolean t = f.removeFriend(o.getString("emailRemoving"), o.getString("emailRemoved"));
-					if(t) {
-						out.println("REMOVING SUCCESSFUL");
-					}
-					
-					else {
-						out.println("REMOVING FAILED");
+						out.println("MODIFY FAILED");
 					}
 				}
 				
