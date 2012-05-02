@@ -10,6 +10,7 @@ import json.JSONObject;
 import json.JSONTokener;
 
 import edu.cmu.cs214.hw9.db.FriendsDAO;
+import edu.cmu.cs214.hw9.db.SubscriptionsDAO;
 import edu.cmu.cs214.hw9.db.User;
 import edu.cmu.cs214.hw9.db.UserDAO;
 
@@ -17,14 +18,18 @@ public class ServerThread extends Thread {
 	private Socket mySocket;
 	private UserDAO u;
 	private FriendsDAO f;
-	public ServerThread(Socket s, UserDAO u, FriendsDAO f) throws Exception {
+	private SubscriptionsDAO s;
+	
+	public ServerThread(Socket mySocket, UserDAO u,
+					FriendsDAO f, SubscriptionsDAO s) throws Exception {
 		if (s == null) {
 			throw new NullPointerException();
 		}
-		mySocket = s;
-		mySocket.setSoTimeout(600000);
+		this.mySocket = mySocket;
+		this.mySocket.setSoTimeout(600000);
 		this.u = u;
 		this.f = f;
+		this.s = s;
 	}
 	
 	public void run(){
@@ -101,6 +106,18 @@ public class ServerThread extends Thread {
 					}
 				}
 				
+				else if(msg.indexOf("REMOVEFRIEND") == 0) {
+					o = new JSONObject(new JSONTokener(msg.substring(13)));
+					boolean t = f.removeFriend(o.getString("emailRemoving"), o.getString("emailRemoved"));
+					if(t) {
+						out.println("REMOVING SUCCESSFUL");
+					}
+					
+					else {
+						out.println("REMOVING FAILED");
+					}
+				}
+				
 				else if(msg.indexOf("LISTFRIENDS") == 0){
 					String list = f.listFriends(msg.substring(12));
 					out.println(list);
@@ -111,6 +128,35 @@ public class ServerThread extends Thread {
 				/****** SUBSCRIPTION ACTIONS *******/
 				/***********************************/
 				/***********************************/
+				else if(msg.indexOf("ADDSUBSCRIPTION") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(16)));
+					boolean t = s.addSubscription(o.getString("emailSubscriber"), o.getString("emailSubscribed"));
+					if(t) {
+						out.println("ADDING SUCCESSFUL");
+					}
+					
+					else {
+						out.println("ADDING FAILED");
+					}
+				}
+				
+				else if(msg.indexOf("REMOVESUBSCRIPTIONS") == 0) {
+					o = new JSONObject(new JSONTokener(msg.substring(20)));
+					boolean t = f.removeFriend(o.getString("emailRemoving"), o.getString("emailRemoved"));
+					if(t) {
+						out.println("REMOVING SUCCESSFUL");
+					}
+					
+					else {
+						out.println("REMOVING FAILED");
+					}
+				}
+				
+				else if(msg.indexOf("LISTSUBSCRIPTIONS") == 0){
+					String list = s.listSubscriptions(msg.substring(18));
+					out.println(list);
+				}
+				
 				
 				/***********************************/
 				/***********************************/
