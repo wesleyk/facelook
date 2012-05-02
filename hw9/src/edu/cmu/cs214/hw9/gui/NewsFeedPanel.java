@@ -75,6 +75,7 @@ public class NewsFeedPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO MOVE TO USER'S FRIENDS LIST
+				container.replace(new FriendListPanel(emailName, container));
 				
 			}
 			
@@ -96,6 +97,7 @@ public class NewsFeedPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO MOVE TO USER'S SUBSCRIPTION LIST
+				container.replace(new SubscriptionListPanel(emailName, container));
 				
 			}
 			

@@ -6,11 +6,16 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import edu.cmu.cs214.hw9.facelook.FriendController;
+import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+import edu.cmu.cs214.hw9.facelook.SubscriptionController;
 
 public class SubscriptionListPanel extends JPanel {
 
@@ -52,6 +57,25 @@ public class SubscriptionListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel.add(link);
 		 */
+		ArrayList<String> subs = SubscriptionController.listSubscriptions(email);
+		for(String sub: subs){
+			
+			final String subName = sub; //so I can pass this along to the ProfilePanel
+			String userName = NewsfeedController.getUserName(sub);
+			JButton friendButton = new JButton(userName);
+			friendButton.addActionListener(new ActionListener(){   
+				
+				public void actionPerformed(ActionEvent e){
+					
+					container.replace(new ProfilePanel(subName, email, container));
+					
+					
+				}//go to user's profile
+				
+			});
+			panel.add(friendButton);
+		
+		}
 		
 		
 		

@@ -9,9 +9,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import edu.cmu.cs214.hw9.facelook.FriendController;
+import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class FriendListPanel extends JPanel {
 
@@ -53,6 +57,22 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel.add(link);
 		 */
+		ArrayList<String> friends = FriendController.listFriends(email).get(0);
+		for(String friendPending: friends){
+			
+			String userName = NewsfeedController.getUserName(friendPending);
+			JButton friendButton = new JButton(userName);
+			friendButton.addActionListener(new ActionListener(){   
+				//when you press the pending friend button, should accept the friend request?
+				public void actionPerformed(ActionEvent e){
+					
+					
+				}
+				
+			});
+			panel.add(friendButton);
+		
+		}
 		
 		
 		
@@ -77,7 +97,25 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel_1.add(link);
 		 */
+		ArrayList<String> friends2 = FriendController.listFriends(email).get(1);
+		for(String friend: friends2){
+			
+			final String friendName = friend; //so I can pass this along to the ProfilePanel
+			String userName = NewsfeedController.getUserName(friend);
+			JButton friendButton = new JButton(userName);
+			friendButton.addActionListener(new ActionListener(){   
+				
+				public void actionPerformed(ActionEvent e){
+					
+					container.replace(new ProfilePanel(friendName, email, container));
+					
+					
+				}//go to user's profile
+				
+			});
+			panel_1.add(friendButton);
 		
+		}
 		
 		
 		JButton btnNewsFeed = new JButton("News Feed");

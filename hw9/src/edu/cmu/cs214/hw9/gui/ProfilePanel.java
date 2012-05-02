@@ -10,11 +10,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
+import edu.cmu.cs214.hw9.facelook.FriendController;
 import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+import edu.cmu.cs214.hw9.facelook.SubscriptionController;
 
 public class ProfilePanel extends JPanel {
 
@@ -78,6 +81,14 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO ADD/REMOVE FRIEND
+				if(FriendController.modifyFriend(emailName, emailUser)){
+					
+					JOptionPane.showMessageDialog(null, "Added/Removed user as friend");
+				}
+				else{
+					
+					JOptionPane.showMessageDialog(null, "Error: Cannot add friend");
+				}
 				
 			}
 			
@@ -97,6 +108,14 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO SUBSCRIBE TO USER
+				if(SubscriptionController.modifySubscription(emailName, emailUser)){
+					
+					JOptionPane.showMessageDialog(null, "Added/removed subscription to " + emailUser);
+				}
+				else{
+					
+					JOptionPane.showMessageDialog(null, "Error");
+				}
 				
 			}
 			
