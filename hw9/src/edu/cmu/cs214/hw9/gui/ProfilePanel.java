@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
+import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+
 public class ProfilePanel extends JPanel {
 
 	private FacelookAppGUI container;
@@ -32,10 +34,10 @@ public class ProfilePanel extends JPanel {
 		lblFacelook.setBounds(12, 13, 199, 32);
 		add(lblFacelook);
 		
-		String name = "";
+		String name = NewsfeedController.getUserName(emailName);
 		//GET THE NAME THAT IS TIED TO THE EMAIL ADDRESS
 		
-		String username = "";
+		String username = NewsfeedController.getUserName(emailUser);
 		//GET THE USERNAME THAT IS TIED TO THE EMAIL ADDRESS
 
 
@@ -117,10 +119,10 @@ public class ProfilePanel extends JPanel {
 		
 		
 		if(emailUser.equals(emailName)){
-		textField = new JTextField("What's on your mind?");
-		textField.setBounds(12, 60, 300, 32);
-		add(textField);
-		textField.setColumns(10);
+			textField = new JTextField("What's on your mind?");
+			textField.setBounds(12, 60, 300, 32);
+			add(textField);
+			textField.setColumns(10);
 		textField.addFocusListener(new FocusListener() {
 
 	        public void focusGained(FocusEvent e) {

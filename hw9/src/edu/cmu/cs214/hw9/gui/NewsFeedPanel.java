@@ -3,6 +3,7 @@ package edu.cmu.cs214.hw9.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -23,6 +24,7 @@ public class NewsFeedPanel extends JPanel {
 	 * Create the panel.
 	 */
 	private FacelookAppGUI container;
+	private String emailName;
 	public NewsFeedPanel(String email, FacelookAppGUI a) {
 		super();
 		container = a;
@@ -30,7 +32,9 @@ public class NewsFeedPanel extends JPanel {
 		this.setPreferredSize(new Dimension(770,539));
 		setLayout(null);
 		
+		emailName = email;
 		String name = NewsfeedController.getUserName(email);
+
 		//GET THE NAME THAT IS TIED TO THE EMAIL ADDRESS
 		
 		
@@ -51,6 +55,7 @@ public class NewsFeedPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO MOVE TO USER'S OWN PROFILE
+				container.replace(new ProfilePanel(emailName, emailName, container));
 				
 			}
 			
@@ -152,6 +157,13 @@ public class NewsFeedPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				// TODO GO TO THE USER'S PROFILE THAT IS SEARCHED FOR IN txtExample
 				// JTextField
+				
+				String searchEmail = txtExample.getText();
+				if(NewsfeedController.getUserName(searchEmail).equals("")) //user does not exist
+					JOptionPane.showMessageDialog(null, "User with that email does not exist");
+				else
+					container.replace(new ProfilePanel(searchEmail, emailName, container));
+				
 				
 			}
 			
