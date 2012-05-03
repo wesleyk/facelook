@@ -122,4 +122,9 @@ public class PostController {
 		}
 		return new ArrayList<Post>();
 	}
+	
+	public static ArrayList<Post> showNewsFeedPosts (String email){
+		// viewing newsfeed for user with email: email
+		return null;
+	}
 }
