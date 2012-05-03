@@ -120,6 +120,17 @@ public class PostsDAO extends SQLiteAdapter {
 		return ret;
 	}
 	
+	/**
+	 * Return the newsfeed for a given user.
+	 * The procedure is as follows:
+	 * 1) Retrieve up to ten most recent notifications/statuses
+	 * from the friends of the user and the own user
+	 * 2) Retrieve up to ten most recent notifications from
+	 * the user's subscriptions
+	 * 3) Find aggregate ten most recent posts from the twenty
+	 * @param email user that newsfeed will be found for
+	 * @return ArrayList of Posts that represent the newsfeed
+	 */
 	public ArrayList<Post> getNewsFeed (String email){
 		ArrayList<Post> ret = new ArrayList<Post>(10);
 		ResultSet rs = null;
