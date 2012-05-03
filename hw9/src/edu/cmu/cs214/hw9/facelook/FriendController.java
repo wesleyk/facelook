@@ -102,6 +102,9 @@ public class FriendController {
 			ArrayList<String> normalArrayList = new ArrayList<String>();
 			ArrayList<String> pendingArrayList = new ArrayList<String>();
 			ArrayList<ArrayList<String>> toReturn = new ArrayList<ArrayList<String>>();
+			//normalArrayList.add("wes");
+			//pendingArrayList.add("wes2");
+			
 			
 			for(int i = 0; i < normalFriends.length; i++){
 				System.out.println("Norm: " + normalFriends[i]);
@@ -111,7 +114,7 @@ public class FriendController {
 			for(int i = 0; i < pendingFriends.length; i++){
 				System.out.println("Pend: " + pendingFriends[i]);
 				normalArrayList.add(pendingFriends[i]);
-				
+			
 			}
 			
 			toReturn.add(normalArrayList);
