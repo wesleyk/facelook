@@ -57,15 +57,17 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel.add(link);
 		 */
-		ArrayList<String> friends = FriendController.listFriends(email).get(0);
+		ArrayList<String> friends = FriendController.listFriends(email).get(1);
 		for(String friendPending: friends){
 			
+			final String pendingName = friendPending;
 			String userName = NewsfeedController.getUserName(friendPending);
 			JButton friendButton = new JButton(userName);
 			friendButton.addActionListener(new ActionListener(){   
 				//when you press the pending friend button, should accept the friend request?
 				public void actionPerformed(ActionEvent e){
 					
+					container.replace(new ProfilePanel(pendingName, email, container));
 					
 				}
 				
@@ -97,7 +99,7 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel_1.add(link);
 		 */
-		ArrayList<String> friends2 = FriendController.listFriends(email).get(1);
+		ArrayList<String> friends2 = FriendController.listFriends(email).get(0);
 		for(String friend: friends2){
 			
 			final String friendName = friend; //so I can pass this along to the ProfilePanel

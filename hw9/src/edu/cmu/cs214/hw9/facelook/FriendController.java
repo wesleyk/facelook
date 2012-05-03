@@ -54,8 +54,6 @@ public class FriendController {
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
-			StringWriter myWriter = new StringWriter();
-
 			out.println("LISTFRIENDS " + email);//request the username by email
 			
 			String response = in.readLine();
@@ -67,15 +65,19 @@ public class FriendController {
 			ArrayList<String> pendingArrayList = new ArrayList<String>();
 			ArrayList<ArrayList<String>> toReturn = new ArrayList<ArrayList<String>>();
 			
-			for(int i = 0; i < splitString.length; i++){
+			for(int i = 0; i < normalFriends.length; i++){
 				
 				normalArrayList.add(normalFriends[i]);
-				pendingArrayList.add(pendingFriends[i]);
+				
+			}
+			for(int i = 0; i < pendingFriends.length; i++){
+				
+				normalArrayList.add(pendingFriends[i]);
 				
 			}
 			
 			toReturn.add(normalArrayList);
-			toReturn.add(pendingArrayList);
+			toReturn.add(pendingArrayList); 
 			
 			return toReturn;
 			
