@@ -51,7 +51,6 @@ public class FriendListPanel extends JPanel {
 		panel.setLayout(new GridLayout(0, 1, 0, 5));
 		
 		ArrayList<ArrayList<String>> friendLists = FriendController.listFriends(email);
-		
 		/******************************/
 		/******************************/
 		/****** PENDING FRIENDS *******/
