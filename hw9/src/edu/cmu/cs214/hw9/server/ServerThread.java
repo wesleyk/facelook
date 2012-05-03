@@ -107,6 +107,7 @@ public class ServerThread extends Thread {
 				else if(msg.indexOf("MODIFYSUBSCRIPTION") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(19)));
 					boolean t = s.modifySubscription(o.getString("emailSubscriber"), o.getString("emailSubscribed"));
+
 					if(t) {
 						out.println("MODIFY SUCCESSFUL");
 					}

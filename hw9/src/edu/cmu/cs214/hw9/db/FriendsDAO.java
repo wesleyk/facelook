@@ -18,6 +18,7 @@ public class FriendsDAO extends SQLiteAdapter {
 	public boolean isFriend(String email1, String email2) {
 		PreparedStatement ps;
 		ResultSet rs = null;
+		boolean ret;
 		String statement = "SELECT * FROM " + Constants.FRIENDS_TABLE + " WHERE email1=? AND email2=?;";
 		try{
 			ps = conn.prepareStatement(statement);
@@ -29,6 +30,17 @@ public class FriendsDAO extends SQLiteAdapter {
 		} catch(SQLException e){
 			e.printStackTrace();
 		}
+		finally {
+            try{
+            	if(rs != null){
+            		ret = rs.isBeforeFirst();
+            		rs.close();
+            		return ret;
+            	}
+            } catch (SQLException e){
+            	e.printStackTrace();
+            }
+        }
 		
 		return false;
 	}
