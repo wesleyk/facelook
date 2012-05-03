@@ -3,10 +3,8 @@ package edu.cmu.cs214.hw9.facelook;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.Socket;
 
-import json.JSONWriter;
 import edu.cmu.cs214.hw9.db.Constants;
 
 public class NewsfeedController {
@@ -21,8 +19,6 @@ public class NewsfeedController {
 			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-			StringWriter myWriter = new StringWriter();
 
 			out.println("GETUSERNAME " + email);//request the username by email
 			

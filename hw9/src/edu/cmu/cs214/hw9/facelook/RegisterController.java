@@ -1,12 +1,10 @@
 package edu.cmu.cs214.hw9.facelook;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import json.JSONWriter;
 
