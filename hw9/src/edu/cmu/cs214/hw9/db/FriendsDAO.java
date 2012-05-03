@@ -25,7 +25,6 @@ public class FriendsDAO extends SQLiteAdapter {
 			ps.setString(1, email1);
 			ps.setString(2, email2);
 			rs = ps.executeQuery();
-			return rs.isBeforeFirst();
 		} catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -72,6 +71,25 @@ public class FriendsDAO extends SQLiteAdapter {
 		PreparedStatement ps;
 		String statement;
 		
+		//only modify any of emailModified's relationships if there
+		// is mutual friendship. In that case, severe the tie from emailModified
+		// to emailModifying (this is the remove friend case when both are already friends)
+		if(isFriend(emailModifying, emailModified) &&
+				isFriend(emailModified, emailModifying)) {
+			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + " WHERE email1=? AND email2=?;";
+			
+			try{
+				ps = conn.prepareStatement(statement);
+				ps.setString(1, emailModified);
+				ps.setString(2, emailModifying);
+				ps.executeUpdate();
+			} catch(SQLException e){
+				e.printStackTrace();
+				return false;
+			}
+		}
+
+		
 		//if emailModifying is already friends (or is pending to) with
 		// emailModified, remove that relationship
 		if(isFriend(emailModifying, emailModified)) {
@@ -91,24 +109,6 @@ public class FriendsDAO extends SQLiteAdapter {
 		} catch(SQLException e){
 			e.printStackTrace();
 			return false;
-		}
-		
-		//only modify any of emailModified's relationships if there
-		// is mutual friendship. In that case, severe the tie from emailModified
-		// to emailModifying (this is the remove friend case when both are already friends)
-		if(isFriend(emailModifying, emailModified) &&
-				isFriend(emailModified, emailModifying)) {
-			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + " WHERE email1=? AND email2=?;";
-			
-			try{
-				ps = conn.prepareStatement(statement);
-				ps.setString(1, emailModified);
-				ps.setString(2, emailModifying);
-				ps.executeUpdate();
-			} catch(SQLException e){
-				e.printStackTrace();
-				return false;
-			}
 		}
 		
 		return true;
@@ -135,7 +135,7 @@ public class FriendsDAO extends SQLiteAdapter {
 				String friend = rs.getString("email1");
 				
 				// actual friend
-				if(isFriend(friend, email)) {
+				if(isFriend(email, friend)) {
 					friendList += friend + ",";
 				}
 				

@@ -52,6 +52,11 @@ public class FriendListPanel extends JPanel {
 		
 		ArrayList<ArrayList<String>> friendLists = FriendController.listFriends(email);
 		
+		/******************************/
+		/******************************/
+		/****** PENDING FRIENDS *******/
+		/******************************/
+		/******************************/
 		/*
 		 * Fill this grid with buttons that link to profile pages of people who requested you as a friend i.e.
 		 * JButton link = new JButton("Patrick Woody");
@@ -65,7 +70,10 @@ public class FriendListPanel extends JPanel {
 		}
 		
 		for(String friendPending: friends){
-			
+			if(friendPending.length() == 0) {
+				continue;
+			}
+
 			final String pendingName = friendPending;
 			String userName = NewsfeedController.getUserName(friendPending);
 			JButton friendButton = new JButton(userName);
@@ -98,7 +106,11 @@ public class FriendListPanel extends JPanel {
 		scrollPane.setViewportView(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 5));
 		
-		
+		/******************************/
+		/******************************/
+		/****** ACTUAL FRIENDS ********/
+		/******************************/
+		/******************************/
 		/*
 		 * Fill this grid with buttons that link to profile pages i.e.
 		 * JButton link = new JButton("Patrick Woody");
@@ -112,6 +124,9 @@ public class FriendListPanel extends JPanel {
 		}
 		
 		for(String friend: friends2){
+			if(friend.length() == 0) {
+				continue;
+			}
 			
 			final String friendName = friend; //so I can pass this along to the ProfilePanel
 			String userName = NewsfeedController.getUserName(friend);

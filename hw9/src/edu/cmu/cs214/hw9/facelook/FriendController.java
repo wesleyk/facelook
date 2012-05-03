@@ -87,10 +87,13 @@ public class FriendController {
 			out.println("LISTFRIENDS " + email);//request the username by email
 			
 			String response = in.readLine();
+			
+			System.out.println("RESPONSE:\n" + response);
+			
 			//must tokenize response, place in arraylist
 			String[] splitString = response.split(".....");
 			
-			if(splitString.length < 2) {
+			if(splitString.length < 1) {
 				return null;
 			}
 			
@@ -101,12 +104,12 @@ public class FriendController {
 			ArrayList<ArrayList<String>> toReturn = new ArrayList<ArrayList<String>>();
 			
 			for(int i = 0; i < normalFriends.length; i++){
-				
+				System.out.println("Norm: " + normalFriends[i]);
 				normalArrayList.add(normalFriends[i]);
 				
 			}
 			for(int i = 0; i < pendingFriends.length; i++){
-				
+				System.out.println("Pend: " + pendingFriends[i]);
 				normalArrayList.add(pendingFriends[i]);
 				
 			}
