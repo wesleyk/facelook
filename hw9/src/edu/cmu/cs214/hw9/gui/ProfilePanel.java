@@ -81,7 +81,7 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO ADD/REMOVE FRIEND
-				if(FriendController.modifyFriend(emailName, emailUser)){
+				if(FriendController.modifyFriend(emailUser, emailName)){
 					
 					JOptionPane.showMessageDialog(null, "Added/Removed user as friend.");
 				}
@@ -108,7 +108,7 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO SUBSCRIBE TO USER
-				if(SubscriptionController.modifySubscription(emailName, emailUser)){
+				if(SubscriptionController.modifySubscription(emailUser, emailName)){
 					
 					JOptionPane.showMessageDialog(null, "Added/removed subscription to " + emailUser);
 				}
