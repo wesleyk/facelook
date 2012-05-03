@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import json.JSONObject;
 import json.JSONTokener;
@@ -82,6 +81,20 @@ public class ServerThread extends Thread {
 				/********* FRIEND ACTIONS **********/
 				/***********************************/
 				/***********************************/
+				else if(msg.indexOf("ISACTUALFRIENDS") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(16)));
+					boolean t = f.isFriend(o.getString("email1"), o.getString("email2"))
+									&&
+								f.isFriend(o.getString("email2"), o.getString("email1"));
+					if(t) {
+						out.println("FRIENDS");
+					}
+					
+					else {
+						out.println("NOT");
+					}
+				}
+				
 				else if(msg.indexOf("MODIFYFRIEND") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(13)));
 					boolean t = f.modifyFriend(o.getString("emailModifying"), o.getString("emailModified"));
@@ -104,6 +117,19 @@ public class ServerThread extends Thread {
 				/****** SUBSCRIPTION ACTIONS *******/
 				/***********************************/
 				/***********************************/
+				else if(msg.indexOf("ISSUBSCRIBED") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(13)));
+					boolean t = s.isSubscribed(o.getString("email1"), o.getString("email2"));
+
+					if(t) {
+						out.println("SUBSCRIBED");
+					}
+					
+					else {
+						out.println("NOT");
+					}
+				}
+				
 				else if(msg.indexOf("MODIFYSUBSCRIPTION") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(19)));
 					boolean t = s.modifySubscription(o.getString("emailSubscriber"), o.getString("emailSubscribed"));

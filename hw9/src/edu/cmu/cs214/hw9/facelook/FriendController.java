@@ -16,6 +16,35 @@ public class FriendController {
 	private FriendController() {
 	}
 
+	public static boolean isActualFriends(String email1, String email2) {
+		try{
+			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+
+			StringWriter myWriter = new StringWriter();
+			JSONWriter jsonW = new JSONWriter(myWriter);
+			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
+			jsonW.key("email1");//key
+			jsonW.value(email1);//value at key
+			jsonW.key("email2");//key
+			jsonW.value(email2);//value at key
+			jsonW.endObject();//finish object
+			String message = myWriter.toString();//creates a string serializing the object
+			
+			out.println("ISACTUALFRIENDS "+ message);//request the information for email
+			
+			String response = in.readLine();
+			
+			return response.contains("FRIENDS");
+		}
+		catch (Exception e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static boolean modifyFriend(String emailModifying, String emailModified){
 		
 		try{
