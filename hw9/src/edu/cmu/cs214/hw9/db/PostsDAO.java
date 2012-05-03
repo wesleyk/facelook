@@ -27,7 +27,7 @@ public class PostsDAO extends SQLiteAdapter {
 				return ret;
 			}
 			while (rs.next()){
-				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getBoolean("is_status"), rs.getInt("date_added")));
+				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getInt("date_added")));
 			}
 			
 		}
@@ -57,7 +57,7 @@ public class PostsDAO extends SQLiteAdapter {
 		ArrayList<Post> statusPosts = new ArrayList<Post>();
 		
 		for (Post p : ret){
-			if (p.getIsStatus()){
+			if (p.getIsStatus() == 1){
 				statusPosts.add(p);
 			}
 		}
@@ -73,7 +73,7 @@ public class PostsDAO extends SQLiteAdapter {
 		ArrayList<Post> nonStatusPosts = new ArrayList<Post>();
 		
 		for (Post p : ret){
-			if (!p.getIsStatus()){
+			if (p.getIsStatus() == 0){
 				nonStatusPosts.add(p);
 			}
 		}
@@ -108,6 +108,75 @@ public class PostsDAO extends SQLiteAdapter {
 		return topTen;
 	}
 	
+	public ArrayList<Post> topTenStatusPosts(){
+		ArrayList<Post> ret = new ArrayList<Post>();
+		ResultSet rs = null;
+		try {
+			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE is_status=1 ORDER BY date_added DESC;";
+			PreparedStatement ps = conn.prepareStatement(statement);
+			rs = ps.executeQuery();
+			if(!rs.isBeforeFirst()) {
+				System.out.println("no posts (in PostsDAO.java)");
+				return ret;
+			}
+			int i = 0;
+			while (rs.next() && i < 10){
+				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getInt("date_added")));
+				i++;
+			}
+			
+		}
+		catch (Exception e){
+			System.out.println("Error in postsDAO.java topTenStatusPosts method");
+			e.printStackTrace();
+		}
+		finally {
+            try{
+            	if(rs != null){
+            		rs.close();
+            	}
+            } catch (SQLException e){
+            	System.out.println("error in closing resultset (in PostsDAO.java)");
+            	e.printStackTrace();
+            }
+        }
+		return ret;
+	}
+	
+	public ArrayList<Post> topTenNotificationPosts(){
+		ArrayList<Post> ret = new ArrayList<Post>();
+		ResultSet rs = null;
+		try {
+			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE is_status=0 ORDER BY date_added DESC;";
+			PreparedStatement ps = conn.prepareStatement(statement);
+			rs = ps.executeQuery();
+			if(!rs.isBeforeFirst()) {
+				System.out.println("no posts (in PostsDAO.java)");
+				return ret;
+			}
+			int i = 0;
+			while (rs.next() && i < 10){
+				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getInt("date_added")));
+				i++;
+			}
+			
+		}
+		catch (Exception e){
+			System.out.println("Error in postsDAO.java topTenNotificationPosts method");
+			e.printStackTrace();
+		}
+		finally {
+            try{
+            	if(rs != null){
+            		rs.close();
+            	}
+            } catch (SQLException e){
+            	System.out.println("error in closing resultset (in PostsDAO.java)");
+            	e.printStackTrace();
+            }
+        }
+		return ret;
+	}
 }
 
 
