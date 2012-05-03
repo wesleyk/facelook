@@ -24,7 +24,6 @@ public class FriendsDAO extends SQLiteAdapter {
 			ps = conn.prepareStatement(statement);
 			ps.setString(1, email1);
 			ps.setString(2, email2);
-			ps.executeUpdate();
 			rs = ps.executeQuery();
 			return rs.isBeforeFirst();
 		} catch(SQLException e){
@@ -76,7 +75,7 @@ public class FriendsDAO extends SQLiteAdapter {
 		//if emailModifying is already friends (or is pending to) with
 		// emailModified, remove that relationship
 		if(isFriend(emailModifying, emailModified)) {
-			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?;";
+			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + " WHERE email1=? AND email2=?;";
 		}
 		
 		//otherwise, add that relationship
@@ -99,7 +98,7 @@ public class FriendsDAO extends SQLiteAdapter {
 		// to emailModifying (this is the remove friend case when both are already friends)
 		if(isFriend(emailModifying, emailModified) &&
 				isFriend(emailModified, emailModifying)) {
-			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + "WHERE email1=? AND email2=?;";
+			statement = "DELETE FROM " + Constants.FRIENDS_TABLE + " WHERE email1=? AND email2=?;";
 			
 			try{
 				ps = conn.prepareStatement(statement);

@@ -55,7 +55,7 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 		//	then remove the subscription
 		if(isSubscribed(emailSubscriber, emailSubscribed)) {
 			PreparedStatement ps;
-			String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + "WHERE email1=? AND email2=?;";
+			String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + " WHERE email1=? AND email2=?;";
 			try{
 				ps = conn.prepareStatement(statement);
 				ps.setString(1, emailSubscriber);
