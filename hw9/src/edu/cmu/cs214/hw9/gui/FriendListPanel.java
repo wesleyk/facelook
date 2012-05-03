@@ -50,6 +50,7 @@ public class FriendListPanel extends JPanel {
 		scrollPane1.setViewportView(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 5));
 		
+		ArrayList<ArrayList<String>> friendLists = FriendController.listFriends(email);
 		
 		/*
 		 * Fill this grid with buttons that link to profile pages of people who requested you as a friend i.e.
@@ -57,7 +58,12 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel.add(link);
 		 */
-		ArrayList<String> friends = FriendController.listFriends(email).get(1);
+		ArrayList<String> friends = new ArrayList<String>();
+		
+		if(friendLists != null) {
+			friends = friendLists.get(1);
+		}
+		
 		for(String friendPending: friends){
 			
 			final String pendingName = friendPending;
@@ -99,7 +105,12 @@ public class FriendListPanel extends JPanel {
 		 * link.addActionListener(new ActionListener(){ ... });
 		 * panel_1.add(link);
 		 */
-		ArrayList<String> friends2 = FriendController.listFriends(email).get(0);
+		ArrayList<String> friends2 = new ArrayList<String>();
+		
+		if(friendLists != null) {
+			friends2 = friendLists.get(0);
+		}
+		
 		for(String friend: friends2){
 			
 			final String friendName = friend; //so I can pass this along to the ProfilePanel

@@ -59,6 +59,11 @@ public class FriendController {
 			String response = in.readLine();
 			//must tokenize response, place in arraylist
 			String[] splitString = response.split(".....");
+			
+			if(splitString.length < 2) {
+				return null;
+			}
+			
 			String[] normalFriends = splitString[0].split(",");
 			String[] pendingFriends = splitString[1].split(",");
 			ArrayList<String> normalArrayList = new ArrayList<String>();

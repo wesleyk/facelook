@@ -4,6 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/miglayout15-swing.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jessica/facelook/hw9/lib/sqlitejdbc-v056.jar"/>
+	<classpathentry kind="lib" path="/Users/Wesley/Dropbox/My_Documents/School/Carnegie_Mellon/Spring2012/15214/facelook/hw9/lib/sqlitejdbc-v056.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
