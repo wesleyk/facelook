@@ -83,7 +83,7 @@ public class ServerThread extends Thread {
 				/***********************************/
 				/***********************************/
 				else if(msg.indexOf("MODIFYFRIEND") == 0){
-					o = new JSONObject(new JSONTokener(msg.substring(10)));
+					o = new JSONObject(new JSONTokener(msg.substring(13)));
 					boolean t = f.modifyFriend(o.getString("emailModifying"), o.getString("emailModified"));
 					if(t) {
 						out.println("MODIFY SUCCESSFUL");
