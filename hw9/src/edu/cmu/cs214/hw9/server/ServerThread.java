@@ -3,12 +3,18 @@ package edu.cmu.cs214.hw9.server;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
+import json.JSONArray;
 import json.JSONObject;
 import json.JSONTokener;
+import json.JSONWriter;
 
 import edu.cmu.cs214.hw9.db.FriendsDAO;
+import edu.cmu.cs214.hw9.db.PostsDAO;
+import edu.cmu.cs214.hw9.db.Post;
 import edu.cmu.cs214.hw9.db.SubscriptionsDAO;
 import edu.cmu.cs214.hw9.db.User;
 import edu.cmu.cs214.hw9.db.UserDAO;
@@ -18,9 +24,10 @@ public class ServerThread extends Thread {
 	private UserDAO u;
 	private FriendsDAO f;
 	private SubscriptionsDAO s;
+	private PostsDAO p;
 	
 	public ServerThread(Socket mySocket, UserDAO u,
-					FriendsDAO f, SubscriptionsDAO s) throws Exception {
+					FriendsDAO f, SubscriptionsDAO s, PostsDAO p) throws Exception {
 		if (s == null) {
 			throw new NullPointerException();
 		}
@@ -29,6 +36,7 @@ public class ServerThread extends Thread {
 		this.u = u;
 		this.f = f;
 		this.s = s;
+		this.p = p;
 	}
 	
 	public void run(){
@@ -154,7 +162,50 @@ public class ServerThread extends Thread {
 				/**** MAKING AND VIEWING POSTS *****/
 				/***********************************/
 				/***********************************/
-				
+				else if(msg.indexOf("POST STATUS") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(12)));
+					boolean t = p.createPost(o.getString("email"), o.getString("content"), o.getInt("is_status"), o.getLong("date_added"));
+					
+					if (t){
+						out.println("POST STATUS SUCCESSFUL");
+					}
+					else{
+						out.println("POST STATUS FAILED");
+					}
+				}
+				else if(msg.indexOf("POST NOTIF") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(11)));
+					boolean t = p.createPost(o.getString("email"), o.getString("content"), o.getInt("is_status"), o.getLong("date_added"));
+					
+					if (t){
+						out.println("POST NOTIF SUCCESSFUL");
+					}
+					else{
+						out.println("POST NOTIF FAILED");
+					}
+				}
+				else if(msg.indexOf("GET STATUS AND NOTIF") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(21)));
+					ArrayList<Post> ret = p.topTenPostsByEmail(o.getString("email"));
+					
+					JSONArray arr = p.convertToJSONArray(ret);
+					
+					StringWriter myWriter = new StringWriter();
+					arr.write(myWriter);
+					String message = myWriter.toString();
+					out.println("SUCCESS " + message);
+				}
+				else if(msg.indexOf("GET NOTIF") == 0){
+					o = new JSONObject(new JSONTokener(msg.substring(10)));
+					ArrayList<Post> ret = p.topTenNotificationsByEmail(o.getString("email"));
+					
+					JSONArray arr = p.convertToJSONArray(ret);
+					
+					StringWriter myWriter = new StringWriter();
+					arr.write(myWriter);
+					String message = myWriter.toString();
+					out.println("SUCCESS " + message);
+				}
 				/***********************************/
 				/***********************************/
 				/********** USER ACTIONS ***********/

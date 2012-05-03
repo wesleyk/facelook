@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,8 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 
+import edu.cmu.cs214.hw9.db.Post;
 import edu.cmu.cs214.hw9.facelook.FriendController;
 import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+import edu.cmu.cs214.hw9.facelook.PostController;
 import edu.cmu.cs214.hw9.facelook.SubscriptionController;
 
 public class ProfilePanel extends JPanel {
@@ -68,12 +72,23 @@ public class ProfilePanel extends JPanel {
 		 * If there are less than 10 then leave the remainder of the grid blank. These don't need to link back to same page.
 		 */
 		
+		ArrayList<Post> arr = PostController.showPosts(emailName, emailUser);
+		if (arr.size() > 10){
+			System.out.println("DIDN'T GET 10 POSTS!");
+		}
+		
+		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
+		for (Post p : arr){
+			Date d = new Date(p.getDateAdded()*1000);
+			StatusPost sp = new StatusPost(p.getEmail(), d, p.getContent());
+			stArr.add(sp);
+			panel.add(sp);
+		}
 		
 		if(!emailUser.equals(emailName)){//Only show these when it is not your own profile
 		JButton btnAddFriend = new JButton("Add/Remove Friend");
 		btnAddFriend.setBounds(12, 49, 155, 25);
 		add(btnAddFriend);
-		
 		
 		//=====================================//
 		btnAddFriend.addActionListener(new ActionListener(){
@@ -167,6 +182,15 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO HANDLE POSTING OF STATUS
+				String status = textField.getText();
+				long d = System.currentTimeMillis()/1000;
+				boolean t = PostController.doPost(emailName, status, 1, d);
+				if (t){
+					JOptionPane.showMessageDialog(null, "Post Successful!");	
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "An Error Occured while trying to post");
+				}
 			}
 			
 		});
@@ -185,8 +209,16 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO HANDLE POSTING OF NOTIFICATION
+				String status = textField.getText();
+				long d = System.currentTimeMillis()/1000;
+				boolean t = PostController.doPost(emailName, status, 0, d);
+				if (t){
+					JOptionPane.showMessageDialog(null, "Post Successful!");
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "An Error Occured while trying to post");
+				}
 			}
-			
 		});
 		//=====================================//
 
