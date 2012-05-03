@@ -77,13 +77,16 @@ public class ProfilePanel extends JPanel {
 			System.out.println("DIDN'T GET 10 POSTS!");
 		}
 		
+		System.out.println("Posts from database (" + arr.size() + "): ");
 		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
 		for (Post p : arr){
 			Date d = new Date(p.getDateAdded()*1000);
 			StatusPost sp = new StatusPost(p.getEmail(), d, p.getContent());
+			System.out.println(p.getContent());
 			stArr.add(sp);
 			panel.add(sp);
 		}
+		System.out.println("Done printing posts from database!");
 		
 		if(!emailUser.equals(emailName)){//Only show these when it is not your own profile
 		JButton btnAddFriend = new JButton("Add/Remove Friend");
@@ -186,7 +189,8 @@ public class ProfilePanel extends JPanel {
 				long d = System.currentTimeMillis()/1000;
 				boolean t = PostController.doPost(emailName, status, 1, d);
 				if (t){
-					JOptionPane.showMessageDialog(null, "Post Successful!");	
+					JOptionPane.showMessageDialog(null, "Post Successful!");
+					System.out.println("Tried to post: " + status);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "An Error Occured while trying to post");
@@ -209,11 +213,12 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO HANDLE POSTING OF NOTIFICATION
-				String status = textField.getText();
+				String notif = textField.getText();
 				long d = System.currentTimeMillis()/1000;
-				boolean t = PostController.doPost(emailName, status, 0, d);
+				boolean t = PostController.doPost(emailName, notif, 0, d);
 				if (t){
 					JOptionPane.showMessageDialog(null, "Post Successful!");
+					System.out.println("Tried to post: " + notif);
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "An Error Occured while trying to post");

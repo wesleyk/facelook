@@ -68,7 +68,7 @@ public class PostController {
 			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
 			
 			// friends see both notifications and statuses, and subscribers see only statuses.
-			if (FriendController.isActualFriends(email1, email2)){
+			if (FriendController.isActualFriends(email1, email2) || email1.equals(email2)){
 				jsonW.key("email");//key
 				jsonW.value(email1);//value at key
 				jsonW.endObject();//finish object
@@ -76,6 +76,7 @@ public class PostController {
 				
 				out.println("GET STATUS AND NOTIF "+ message);
 				String response = in.readLine();
+				System.out.println("response in GET STATUS AND NOTIF: " + response);
 				// read in response from server in the form of string, then use JSON tokener to parse it, and get the array list of posts
 				JSONArray o = new JSONArray(new JSONTokener(response.substring(8)));
 				ArrayList<Post> arr = new ArrayList<Post>();
