@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import edu.cmu.cs214.hw9.facelook.FriendController;
 import edu.cmu.cs214.hw9.facelook.NewsfeedController;
 import edu.cmu.cs214.hw9.facelook.SubscriptionController;
 

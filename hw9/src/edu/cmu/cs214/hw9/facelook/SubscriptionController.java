@@ -22,8 +22,6 @@ public class SubscriptionController {
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
-			StringWriter myWriter = new StringWriter();
-
 			out.println("LISTSUBSCRIPTIONS " + email);//request the username by email
 			
 			String response = in.readLine();
@@ -31,8 +29,8 @@ public class SubscriptionController {
 			String[] splitString = response.split(",");
 			ArrayList<String> toReturn = new ArrayList<String>();
 			for(int i = 0; i < splitString.length; i++){
-				
-				toReturn.add(splitString[i]);
+				if(splitString[i].length() > 0)
+					toReturn.add(splitString[i]);	
 				
 			}
 			return toReturn;
