@@ -77,7 +77,7 @@ public class UserDAO extends SQLiteAdapter {
 		
 		//User u = new User(email, password, andrewID, 0, false);
 		PreparedStatement ps;
-		String statement = "INSERT INTO " + Constants.USERS_TABLE + " (email, password, name) VALUES (?, ?, ?)";
+		String statement = "INSERT INTO " + Constants.USERS_TABLE + " (email, password, name) VALUES (?, ?, ?);";
 		try{
 			ps = conn.prepareStatement(statement);
 			ps.setString(1, email);

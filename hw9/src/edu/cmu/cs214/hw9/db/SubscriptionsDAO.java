@@ -45,7 +45,7 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 		//	then remove the subscription
 		if(isSubscribed(emailSubscriber, emailSubscribed)) {
 			PreparedStatement ps;
-			String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + "WHERE email1=? AND email2=?";
+			String statement = "DELETE FROM " + Constants.SUBSCRIPTIONS_TABLE + "WHERE email1=? AND email2=?;";
 			try{
 				ps = conn.prepareStatement(statement);
 				ps.setString(1, emailSubscriber);
@@ -60,7 +60,7 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 		//otherwise, add the subscription
 		else {
 			PreparedStatement ps;
-			String statement = "INSERT INTO " + Constants.SUBSCRIPTIONS_TABLE + " (email1, email2) VALUES (?, ?)";
+			String statement = "INSERT INTO " + Constants.SUBSCRIPTIONS_TABLE + " (email1, email2) VALUES (?, ?);";
 			try{
 				ps = conn.prepareStatement(statement);
 				ps.setString(1, emailSubscriber);
