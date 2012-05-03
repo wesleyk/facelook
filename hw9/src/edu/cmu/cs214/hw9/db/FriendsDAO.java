@@ -121,7 +121,7 @@ public class FriendsDAO extends SQLiteAdapter {
 	/**
 	 * Return list of friends of the given email
 	 * @param email user id for user that list of friends relates to
-	 * @return array list containing two array lists, 
+	 * @return JSONArray containing friends along with whether they are pending
 	 */
 	public JSONArray listFriends(String email){
 		ResultSet rs = null;

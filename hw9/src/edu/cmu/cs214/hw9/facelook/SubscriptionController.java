@@ -7,6 +7,9 @@ import java.io.StringWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import json.JSONArray;
+import json.JSONObject;
+import json.JSONTokener;
 import json.JSONWriter;
 import edu.cmu.cs214.hw9.db.Constants;
 
@@ -88,16 +91,16 @@ public class SubscriptionController {
 			out.println("LISTSUBSCRIPTIONS " + email);//request the username by email
 			
 			String response = in.readLine();
-			//must tokenize response, place in arraylist
-			String[] splitString = response.split(",");
-			ArrayList<String> toReturn = new ArrayList<String>();
-			for(int i = 0; i < splitString.length; i++){
-				if(splitString[i].length() > 0)
-					toReturn.add(splitString[i]);	
-				
-			}
-			return toReturn;
 			
+			JSONArray o = new JSONArray(new JSONTokener(response));
+			
+			ArrayList<String> toReturn = new ArrayList<String>();
+			for(int i = 0; i < o.length(); i++){
+				JSONObject j = o.getJSONObject(i);
+				toReturn.add(j.getString("subscription"));	
+			}
+			
+			return toReturn;
 		}
 		catch (Exception e){
 			// TODO Auto-generated catch block

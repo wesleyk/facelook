@@ -155,7 +155,11 @@ public class ServerThread extends Thread {
 				}
 				
 				else if(msg.indexOf("LISTSUBSCRIPTIONS") == 0){
-					String list = s.listSubscriptions(msg.substring(18));
+					JSONArray arr = s.listSubscriptions(msg.substring(18));
+					
+					StringWriter myWriter = new StringWriter();
+					arr.write(myWriter);
+					String list = myWriter.toString();
 					out.println(list);
 				}
 				
@@ -201,6 +205,17 @@ public class ServerThread extends Thread {
 				else if(msg.indexOf("GET NOTIF") == 0){
 					o = new JSONObject(new JSONTokener(msg.substring(10)));
 					ArrayList<Post> ret = p.topTenNotificationsByEmail(o.getString("email"));
+					
+					JSONArray arr = p.convertToJSONArray(ret);
+					
+					StringWriter myWriter = new StringWriter();
+					arr.write(myWriter);
+					String message = myWriter.toString();
+					out.println("SUCCESS " + message);
+				}
+				else if(msg.indexOf("SHOWNEWSFEED") == 0) {
+					o = new JSONObject(new JSONTokener(msg.substring(13)));
+					ArrayList<Post> ret = p.getNewsFeed(o.getString("email"));
 					
 					JSONArray arr = p.convertToJSONArray(ret);
 					

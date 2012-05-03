@@ -13,10 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JTextField;
 
+import edu.cmu.cs214.hw9.db.Post;
 import edu.cmu.cs214.hw9.facelook.NewsfeedController;
+import edu.cmu.cs214.hw9.facelook.PostController;
 
 public class NewsFeedPanel extends JPanel {
 
@@ -123,6 +126,23 @@ public class NewsFeedPanel extends JPanel {
 		 * It is ok to generate this at the beginning and only refresh when coming back to this page. 
 		 * If there are less than 10 then leave the remainder of the grid blank.
 		 */
+		ArrayList<Post> arr = PostController.showNewsFeedPosts(email);
+		if (arr.size() > 10){
+			System.out.println("DIDN'T GET 10 POSTS!");
+		}
+		
+		System.out.println("Posts from database (" + arr.size() + "): ");
+		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
+		for (Post p : arr){
+			Date d = new Date(p.getDateAdded()*1000);
+			StatusPost sp = new StatusPost(p.getEmail(), d, p.getContent());
+			System.out.println(p.getContent());
+			stArr.add(sp);
+			panel.add(sp);
+		}
+		System.out.println("Done printing posts from database!");
+		
+		
 		
 		
 		

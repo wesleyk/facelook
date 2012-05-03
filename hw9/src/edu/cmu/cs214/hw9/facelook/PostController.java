@@ -125,6 +125,28 @@ public class PostController {
 	
 	public static ArrayList<Post> showNewsFeedPosts (String email){
 		// viewing newsfeed for user with email: email
+		try{
+			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
+			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+
+			out.println("SHOWNEWSFEED " + email); //request the list by email
+			
+			String response = in.readLine();
+			JSONArray o = new JSONArray(new JSONTokener(response));
+			ArrayList<Post> arr = new ArrayList<Post>();
+			for (int i = 0; i < o.length(); i++){
+				JSONObject j = o.getJSONObject(i);
+				Post p = new Post(j.getString("email"), j.getString("content"), 
+								  j.getInt("is_status"), j.getLong("date_added"));
+				arr.add(p);
+			}
+			return arr;
+		}
+		catch (Exception e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

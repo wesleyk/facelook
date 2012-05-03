@@ -120,6 +120,30 @@ public class PostsDAO extends SQLiteAdapter {
 		return ret;
 	}
 	
+	public ArrayList<Post> getNewsFeed (String email){
+		ArrayList<Post> ret = new ArrayList<Post>(10);
+		ResultSet rs = null;
+		try {
+			
+			
+		}
+		catch (Exception e){
+			System.out.println("Error in postsDAO.java getNewsFeed method");
+			e.printStackTrace();
+		}
+		finally {
+            try{
+            	if(rs != null){
+            		rs.close();
+            	}
+            } catch (SQLException e){
+            	System.out.println("error in closing resultset (in PostsDAO.java)");
+            	e.printStackTrace();
+            }
+        }
+		return ret;
+	}
+	
 	public boolean createPost (String email, String content, int is_status, long date_added){
 		if (!(is_status == 0 || is_status ==1)){
 			System.out.println("IS_STATUS CANNOT BE ANYTHING OTHER THAN 0 OR 1!");

@@ -4,6 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import json.JSONArray;
+import json.JSONException;
+import json.JSONObject;
+
 public class SubscriptionsDAO extends SQLiteAdapter {
 	public SubscriptionsDAO() throws Exception{
 		super();
@@ -88,19 +92,28 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 	/**
 	 * Return list of subscriptions of the given email
 	 * @param email user id for user that list of subscriptions relates to
-	 * @return list of subscriptions in CSV format
+	 * @return list of subscriptions in JSONArray format
 	 */
-	public String listSubscriptions(String email){
+	public JSONArray listSubscriptions(String email){
 		
 		ResultSet rs = null;
-		String subscriptionList = "";
+		JSONArray subscriptionList = new JSONArray();
+		
 		try {
 			String statement = "SELECT * FROM " + Constants.SUBSCRIPTIONS_TABLE + " WHERE email1=?;";
 			PreparedStatement ps = conn.prepareStatement(statement);
 			ps.setString(1, email);
 			rs = ps.executeQuery();
 			while(rs.next()){
-				subscriptionList += rs.getString("email2") + ",";
+				String subscription = rs.getString("email2");
+				JSONObject j = new JSONObject();
+				try {
+					j.put("subscription", subscription);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+				subscriptionList.put(j);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
