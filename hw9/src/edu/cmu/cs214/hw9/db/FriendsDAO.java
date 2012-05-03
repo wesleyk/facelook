@@ -3,6 +3,9 @@ package edu.cmu.cs214.hw9.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import json.JSONArray;
+import json.JSONException;
+import json.JSONObject;
 
 public class FriendsDAO extends SQLiteAdapter {
 	public FriendsDAO() throws Exception{
@@ -118,14 +121,12 @@ public class FriendsDAO extends SQLiteAdapter {
 	/**
 	 * Return list of friends of the given email
 	 * @param email user id for user that list of friends relates to
-	 * @return list of friends in CSV format, with five periods separating
-	 * 			actual and pending friends
+	 * @return array list containing two array lists, 
 	 */
-	public String listFriends(String email){
-		
+	public JSONArray listFriends(String email){
 		ResultSet rs = null;
-		String friendList = "";
-		String pendingFriendList = "";
+		JSONArray friendList = new JSONArray();
+		
 		try {
 			String statement = "SELECT * FROM " + Constants.FRIENDS_TABLE + " WHERE email2=?;";
 			PreparedStatement ps = conn.prepareStatement(statement);
@@ -133,16 +134,25 @@ public class FriendsDAO extends SQLiteAdapter {
 			rs = ps.executeQuery();
 			while(rs.next()){
 				String friend = rs.getString("email1");
-				
-				// actual friend
-				if(isFriend(email, friend)) {
-					friendList += friend + ",";
+				JSONObject j = new JSONObject();
+				try {
+					j.put("friend", friend);
+					
+					// actual friend
+					if(isFriend(email, friend)) {
+						j.put("pending", false);
+					}
+					
+					// pending friend
+					else {
+						j.put("pending", true);
+					}
+					
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
 				
-				// pending friend
-				else {
-					pendingFriendList += friend + ",";
-				}
+				friendList.put(j);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -156,6 +166,6 @@ public class FriendsDAO extends SQLiteAdapter {
             }
         }
 		
-		return friendList + "....." + pendingFriendList;
+		return friendList;
 	}
 }

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import json.JSONArray;
 import json.JSONObject;
 import json.JSONTokener;
-import json.JSONWriter;
 
 import edu.cmu.cs214.hw9.db.FriendsDAO;
 import edu.cmu.cs214.hw9.db.PostsDAO;
@@ -116,7 +115,11 @@ public class ServerThread extends Thread {
 				}
 				
 				else if(msg.indexOf("LISTFRIENDS") == 0){
-					String list = f.listFriends(msg.substring(12));
+					JSONArray arr = f.listFriends(msg.substring(12));
+					
+					StringWriter myWriter = new StringWriter();
+					arr.write(myWriter);
+					String list = myWriter.toString();
 					out.println(list);
 				}
 				
@@ -206,6 +209,7 @@ public class ServerThread extends Thread {
 					String message = myWriter.toString();
 					out.println("SUCCESS " + message);
 				}
+				
 				/***********************************/
 				/***********************************/
 				/********** USER ACTIONS ***********/
