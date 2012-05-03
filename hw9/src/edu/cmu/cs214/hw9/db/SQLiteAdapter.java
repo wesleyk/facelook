@@ -20,7 +20,7 @@ public class SQLiteAdapter {
 			stat.executeUpdate("CREATE TABLE IF NOT EXISTS " + Constants.USERS_TABLE + " (email varchar(50) PRIMARY KEY, name varchar(50), password varchar(50));");
 			
 			stat = conn.createStatement();
-			stat.executeUpdate("CREATE TABLE IF NOT EXISTS " + Constants.POSTS_TABLE + " (email varchar(50) PRIMARY KEY, content varchar(200), is_post boolean, date_added integer);");
+			stat.executeUpdate("CREATE TABLE IF NOT EXISTS " + Constants.POSTS_TABLE + " (email varchar(50) PRIMARY KEY, content varchar(200), is_status boolean, date_added integer);");
 			
 			stat = conn.createStatement();
 			stat.executeUpdate("CREATE TABLE IF NOT EXISTS " + Constants.FRIENDS_TABLE + " (email1 varchar(50) PRIMARY KEY, email2 varchar(50));");
