@@ -26,11 +26,16 @@ public class CacheKey {
 		
 	}
 	
-	public boolean equals(CacheKey other){
-		
-		return(this.email.equals(other.getEmail()) &&
-				(this.isFriend == other.getIsFriend()));
-		
+	@Override
+	public int hashCode() {
+		return isFriend ? email.hashCode() + 1: email.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		CacheKey other = (CacheKey) o;
+		return (email.equals(other.getEmail()) &&
+				(isFriend == other.getIsFriend()));
 	}
 	
 }

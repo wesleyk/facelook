@@ -8,5 +8,6 @@ public class Constants {
 	public static final String POSTS_TABLE = "Posts";
 	public static final String FRIENDS_TABLE = "Friends";
 	public static final String SUBSCRIPTIONS_TABLE = "Subscriptions";
-	public static final int CACHE_SIZE=10;
+	public static final int CACHE_SIZE = 10;
+	public static final int MAX_POSTS = 10;
 }

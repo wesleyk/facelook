@@ -29,11 +29,22 @@ public class PostsDAO extends SQLiteAdapter {
 		
 		ArrayList<Post> ret = new ArrayList<Post>(10);
 		
+		/*****************************/
+		/*****************************/
+		/******** CACHE CHECK ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE CHECK in topTenPostsByEmail");
 		CacheKey myKey = new CacheKey(email, true);
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
 			return retPosts;
 		}
+		/*****************************/
+		/*****************************/
+		/****** END CACHE CHECK ******/
+		/*****************************/
+		/*****************************/
 		
 		ResultSet rs = null;
 		try {
@@ -66,10 +77,22 @@ public class PostsDAO extends SQLiteAdapter {
             }
         }
 		
+		/*****************************/
+		/*****************************/
+		/******** CACHE STORE ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE STORE in topTenPostsByEmail");
+		
 		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
 			cache.put(myKey, ret);
 		}
+		/*****************************/
+		/*****************************/
+		/****** END CACHE STORE ******/
+		/*****************************/
+		/*****************************/
 		
 		return ret;
 	}
@@ -78,11 +101,23 @@ public class PostsDAO extends SQLiteAdapter {
 	public ArrayList<Post> topTenNotificationsByEmail (String email){
 		ArrayList<Post> ret = new ArrayList<Post>(10);
 		
+		
+		/*****************************/
+		/*****************************/
+		/******** CACHE CHECK ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE CHECK in topTenNotificationsByEmail");
 		CacheKey myKey = new CacheKey(email, false); //false = just get notifications
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
 			return retPosts;
 		}
+		/*****************************/
+		/*****************************/
+		/****** END CACHE CHECK ******/
+		/*****************************/
+		/*****************************/
 		
 		ResultSet rs = null;
 		try {
@@ -114,10 +149,21 @@ public class PostsDAO extends SQLiteAdapter {
             }
         }
 		
+		/*****************************/
+		/*****************************/
+		/******** CACHE STORE ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE STORE in topTenNotificationsByEmail");
 		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
 			cache.put(myKey, ret);
 		}
+		/*****************************/
+		/*****************************/
+		/****** END CACHE STORE ******/
+		/*****************************/
+		/*****************************/
 		
 		return ret;
 	}
@@ -127,6 +173,31 @@ public class PostsDAO extends SQLiteAdapter {
 			System.out.println("IS_STATUS CANNOT BE ANYTHING OTHER THAN 0 OR 1!");
 			return false;
 		}
+		
+		/*****************************/
+		/*****************************/
+		/******** CACHE CHECK ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE CHECK in createPost");
+		CacheKey subKey = new CacheKey(email, false);
+		CacheKey friendKey = new CacheKey(email, true);
+		
+		ArrayList<Post> subCache = null;
+		ArrayList<Post> friendCache = null;
+		
+		subCache = cache.get(subKey);
+		
+		if(is_status == 1) {
+			friendCache = cache.get(friendKey);
+		}
+		
+		/*****************************/
+		/*****************************/
+		/****** END CACHE CHECK ******/
+		/*****************************/
+		/*****************************/
+		
 		PreparedStatement ps;
 		String statement = "INSERT INTO " + Constants.POSTS_TABLE + " (email, content, is_status, date_added) VALUES (?, ?, ?, ?);";
 		try{
@@ -140,6 +211,68 @@ public class PostsDAO extends SQLiteAdapter {
 			e.printStackTrace();
 			return false;
 		}
+		
+		Post newPost = new Post(email, content, is_status, date_added);
+		
+		/*****************************/
+		/*****************************/
+		/******* CACHE UPDATE ********/
+		/*****************************/
+		/*****************************/
+		System.out.println("CACHE UPDATE in createPost");
+		//update subscription aspect of cache
+		
+		//case where there was no entry to begin with
+		if(subCache == null) {
+			ArrayList<Post> store = new ArrayList<Post>();
+			store.add(newPost);
+			cache.put(subKey, store);
+		}
+		
+		//otherwise, modify existing array list
+		else {
+			//if the list already has 10 elements,
+			// then remove the last element
+			if(subCache.size() == Constants.MAX_POSTS) {
+				subCache.remove(Constants.MAX_POSTS-1);
+			}
+			
+			//add the new element to the front of the list
+			subCache.add(0,newPost);
+			cache.put(subKey, subCache);
+		}
+		
+		//update friend aspect of cache
+		if(is_status == 1) {
+			
+			//case where there was no entry to begin with
+			if(friendCache == null) {
+				ArrayList<Post> store = new ArrayList<Post>();
+				store.add(newPost);
+				cache.put(friendKey, store);
+			}
+			
+			//otherwise, modify existing array list
+			else {
+				//if the list already has 10 elements,
+				// then remove the last element
+				if(friendCache.size() == Constants.MAX_POSTS) {
+					friendCache.remove(Constants.MAX_POSTS-1);
+				}
+				
+				//add the new element to the front of the list
+				friendCache.add(0,newPost);
+				cache.put(friendKey, friendCache);
+			}
+		}
+		
+		
+		/*****************************/
+		/*****************************/
+		/***** END CACHE UPDATE ******/
+		/*****************************/
+		/*****************************/
+		
 		return true;
 	}
 	
