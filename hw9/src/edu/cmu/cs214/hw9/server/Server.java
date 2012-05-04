@@ -4,7 +4,6 @@ import java.net.ServerSocket;
 import java.util.Scanner;
 
 import edu.cmu.cs214.hw9.server.ServerThread;
-import edu.cmu.cs214.hw9.db.Constants;
 import edu.cmu.cs214.hw9.db.FriendsDAO;
 import edu.cmu.cs214.hw9.db.PostsDAO;
 import edu.cmu.cs214.hw9.db.SubscriptionsDAO;
