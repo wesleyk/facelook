@@ -20,11 +20,11 @@ public class PostComparable implements Comparator<Post>{
     	long date1 = p1.getDateAdded();
     	long date2 = p2.getDateAdded();
     	
-    	if(date1 > date2) {
+    	if(date1 < date2) {
     		return 1;
     	}
     	
-    	else if(date2 > date1) {
+    	else if(date2 < date1) {
     		return -1;
     	}
     	
