@@ -22,6 +22,7 @@ public class PostsDAO extends SQLiteAdapter {
 		ResultSet rs = null;
 		try {
 			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email=? ORDER BY date_added DESC LIMIT 10;";
+			System.out.println(statement);
 			PreparedStatement ps = conn.prepareStatement(statement);
 			ps.setString(1, email);
 			rs = ps.executeQuery();

@@ -86,6 +86,7 @@ public class FriendsDAO extends SQLiteAdapter {
 				ps.setString(1, emailModified);
 				ps.setString(2, emailModifying);
 				ps.executeUpdate();
+				ps.close();
 			} catch(SQLException e){
 				e.printStackTrace();
 				return false;
@@ -109,6 +110,7 @@ public class FriendsDAO extends SQLiteAdapter {
 			ps.setString(1, emailModifying);
 			ps.setString(2, emailModified);
 			ps.executeUpdate();
+			ps.close();
 		} catch(SQLException e){
 			e.printStackTrace();
 			return false;

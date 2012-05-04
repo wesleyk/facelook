@@ -126,7 +126,7 @@ public class NewsFeedPanel extends JPanel {
 		 * It is ok to generate this at the beginning and only refresh when coming back to this page. 
 		 * If there are less than 10 then leave the remainder of the grid blank.
 		 */
-		/*ArrayList<Post> arr = PostController.showNewsFeedPosts(email);
+		ArrayList<Post> arr = PostController.showNewsFeedPosts(email);
 		if (arr.size() > 10){
 			System.out.println("DIDN'T GET 10 POSTS!");
 		}
@@ -140,7 +140,7 @@ public class NewsFeedPanel extends JPanel {
 			stArr.add(sp);
 			panel.add(sp);
 		}
-		System.out.println("Done printing posts from database!");*/
+		System.out.println("Done printing posts from database!");
 		
 		
 		

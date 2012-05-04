@@ -97,31 +97,25 @@ public class PostController {
 				return arr;
 			}
 			else{
-				if (SubscriptionController.isSubscribed(email2, email1)){
-					jsonW.key("email");//key
-					jsonW.value(email1);//value at key
-					jsonW.endObject();//finish object
-					String message = myWriter.toString();//creates a string serializing the object
-					
-					// get top ten statuses
-					out.println("GET NOTIF "+ message);
-					
-					String response = in.readLine();
-					// read in response from server in the form of string, then use JSON tokener to parse it, and get the array list of posts
-					JSONArray o = new JSONArray(new JSONTokener(response.substring(8)));
-					ArrayList<Post> arr = new ArrayList<Post>();
-					for (int i = 0; i < o.length(); i++){
-						JSONObject j = o.getJSONObject(i);
-						Post p = new Post(j.getString("email"), j.getString("content"), 
-										  j.getInt("is_status"), j.getLong("date_added"));
-						arr.add(p);
-					}
-					return arr;
+				jsonW.key("email");//key
+				jsonW.value(email1);//value at key
+				jsonW.endObject();//finish object
+				String message = myWriter.toString();//creates a string serializing the object
+				
+				// get top ten statuses
+				out.println("GET NOTIF "+ message);
+				
+				String response = in.readLine();
+				// read in response from server in the form of string, then use JSON tokener to parse it, and get the array list of posts
+				JSONArray o = new JSONArray(new JSONTokener(response.substring(8)));
+				ArrayList<Post> arr = new ArrayList<Post>();
+				for (int i = 0; i < o.length(); i++){
+					JSONObject j = o.getJSONObject(i);
+					Post p = new Post(j.getString("email"), j.getString("content"), 
+									  j.getInt("is_status"), j.getLong("date_added"));
+					arr.add(p);
 				}
-				else{
-					// don't show anything
-					return new ArrayList<Post>();
-				}
+				return arr;
 			}
 		}
 		catch (Exception e){
@@ -143,6 +137,7 @@ public class PostController {
 			ArrayList<ArrayList<String>> allFriends =
 									FriendController.listFriends(email);
 			ArrayList<String> friends = new ArrayList<String>();
+			
 			if(allFriends != null) {
 				friends = allFriends.get(0);
 			}
@@ -155,6 +150,13 @@ public class PostController {
 			/***********************************************/
 			/***********************************************/
 			ArrayList<Post> posts = new ArrayList<Post>();
+			
+			//user should see his/her own posts on the newsfeed
+			ArrayList<Post> ownPosts = showPosts(email,email);
+			for(int i = 0; i < ownPosts.size(); i++) {
+				posts.add(ownPosts.get(i));
+			}
+			
 			for(int i = 0; i < friends.size(); i++) {
 				ArrayList<Post> friendPosts = showPosts(email,friends.get(i));
 				System.out.println(friends.get(i));
