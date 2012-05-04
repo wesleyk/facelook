@@ -18,6 +18,11 @@ import edu.cmu.cs214.hw9.db.SubscriptionsDAO;
 import edu.cmu.cs214.hw9.db.User;
 import edu.cmu.cs214.hw9.db.UserDAO;
 
+/**
+ * Purpose: deal with interaction between controllers and models
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class ServerThread extends Thread {
 	private Socket mySocket;
 	private UserDAO u;
@@ -25,6 +30,15 @@ public class ServerThread extends Thread {
 	private SubscriptionsDAO s;
 	private PostsDAO p;
 	
+	/**
+	 * Constructor
+	 * @param mySocket socket that connects to server
+	 * @param u UserDAO
+	 * @param f FriendsDAO
+	 * @param s SubscriptionsDAO
+	 * @param p PostsDAO
+	 * @throws Exception e
+	 */
 	public ServerThread(Socket mySocket, UserDAO u,
 					FriendsDAO f, SubscriptionsDAO s, PostsDAO p) throws Exception {
 		if (s == null) {
@@ -38,6 +52,14 @@ public class ServerThread extends Thread {
 		this.p = p;
 	}
 	
+	/**
+	 * Purpose:
+	 * 1) Read in client request
+	 * 2) Process the request
+	 * 3) Send the request to the server
+	 * 4) Process the response
+	 * 5) Send respone to the client
+	 */
 	public void run(){
 		try{
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(),

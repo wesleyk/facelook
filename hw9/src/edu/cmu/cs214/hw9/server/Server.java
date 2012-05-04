@@ -9,7 +9,17 @@ import edu.cmu.cs214.hw9.db.PostsDAO;
 import edu.cmu.cs214.hw9.db.SubscriptionsDAO;
 import edu.cmu.cs214.hw9.db.UserDAO;
 
+/**
+ * Purpose: Server class, run multiple times for each port
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class Server {
+	
+	/**
+	 * Main method
+	 * @param args system args
+	 */
 	public static void main(String[] args){
 		ServerSocket socket = null;
 		UserDAO u = null;
@@ -21,13 +31,14 @@ public class Server {
 			Scanner sc = new Scanner(System.in);
 			System.out.println("Please enter a port number for this server: ");
 			
-			//ASSUME: As in readme, there will be 5 servers running
+			//ASSUME: As in the README, there will be 5 servers running
 			//with port numbers ranging from 15210 to 15214.
 			int portNum = sc.nextInt();
 			System.out.println("Port number stored.");
 			String dbName = portNum + ".db";
-			
-			u = new UserDAO(dbName);//initialize new database accessor.
+
+			//initialize new database accessors
+			u = new UserDAO(dbName);
 			f = new FriendsDAO(dbName);
 			s = new SubscriptionsDAO(dbName);
 			p = new PostsDAO(dbName);
