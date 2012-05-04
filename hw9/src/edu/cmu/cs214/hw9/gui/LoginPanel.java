@@ -92,6 +92,10 @@ public class LoginPanel extends JPanel {
 				// UPON SUCCESSFUL LOGIN CREATE A FACELOOKAPPGUI JFRAME
 				String email = txtUsername.getText();
 				String password = txtPassword.getText();
+				
+				//calls logincontroller method from controller,
+				//determines if login was successful or not.
+				//launches a new GUI if login was successful, otherwise displays error
 				boolean login = LoginController.login(email, password);
 				if(login) {
 					FacelookAppGUI fl = new FacelookAppGUI(email);

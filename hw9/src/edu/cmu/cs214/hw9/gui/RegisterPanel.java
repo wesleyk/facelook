@@ -128,6 +128,8 @@ public class RegisterPanel extends JPanel {
 				String pass1 = txtPass1.getText();
 				String pass2 = txtPass2.getText();
 				
+				//checks that input is good
+				//(no blank fields, passwords must match)
 				if(name.length() == 0 || email.length() == 0 || pass1.length() == 0) {
 					JOptionPane.showMessageDialog(null, "Empty input! Try again.");
 				}
@@ -137,6 +139,7 @@ public class RegisterPanel extends JPanel {
 				}
 				
 				else {
+					//registers new user into database and logs them in
 					boolean register = RegisterController.register(email, pass1, name);
 					if(register) {
 						LoginController.login(email, pass1);

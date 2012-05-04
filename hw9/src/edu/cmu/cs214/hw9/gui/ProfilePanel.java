@@ -72,10 +72,14 @@ public class ProfilePanel extends JPanel {
 		 * If there are less than 10 then leave the remainder of the grid blank. These don't need to link back to same page.
 		 */
 		
+		//retrieves most recent status posts from database
+		//shows status and notifications if friends, otherwise, 
+		//just shows notifications
 		ArrayList<Post> arr = PostController.showPosts(emailName, emailUser);
 		if (arr.size() > 10){
 			System.out.println("DIDN'T GET 10 POSTS!");
 		}
+		
 		
 		System.out.println("Posts from database (" + arr.size() + "): ");
 		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
@@ -99,6 +103,9 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO ADD/REMOVE FRIEND
+				//modifyfriend either adds or removes a friend/friend request
+				//based on the current relationship between the user viewing
+				//the page and the current user's profile that you are viewing
 				if(FriendController.modifyFriend(emailUser, emailName)){
 					
 					JOptionPane.showMessageDialog(null, "Added/Removed user as friend.");
@@ -126,6 +133,7 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO FILL IN CODE TO SUBSCRIBE TO USER
+				//adds/removes subscription
 				if(SubscriptionController.modifySubscription(emailUser, emailName)){
 					
 					JOptionPane.showMessageDialog(null, "Added/removed subscription to " + emailName);
@@ -192,6 +200,7 @@ public class ProfilePanel extends JPanel {
 					JOptionPane.showMessageDialog(null, "Error! Post can only be up to 150 characters long.");
 				}
 				
+				//creates a new post on the profile panel, sends info to server
 				else {
 					long d = System.currentTimeMillis()/1000;
 					boolean t = PostController.doPost(emailName, status, 1, d);
@@ -221,6 +230,7 @@ public class ProfilePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO HANDLE POSTING OF NOTIFICATION
+				//posts new notification to server
 				String notif = textField.getText();
 				long d = System.currentTimeMillis()/1000;
 				boolean t = PostController.doPost(emailName, notif, 0, d);

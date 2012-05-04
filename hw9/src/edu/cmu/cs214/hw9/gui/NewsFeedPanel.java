@@ -27,7 +27,10 @@ public class NewsFeedPanel extends JPanel {
 	 * Create the panel.
 	 */
 	private FacelookAppGUI container;
-	private String emailName;
+	
+	//private emailName field for use in creating new GUI panels
+	private String emailName; 
+	
 	public NewsFeedPanel(String email, FacelookAppGUI a) {
 		super();
 		container = a;
@@ -36,9 +39,8 @@ public class NewsFeedPanel extends JPanel {
 		setLayout(null);
 		
 		emailName = email;
+		//gets the name that is tied to the email address through NewsFeedController
 		String name = NewsfeedController.getUserName(email);
-
-		//GET THE NAME THAT IS TIED TO THE EMAIL ADDRESS
 		
 		
 		JLabel lblFacelook = new JLabel("Facelook");
@@ -126,12 +128,18 @@ public class NewsFeedPanel extends JPanel {
 		 * It is ok to generate this at the beginning and only refresh when coming back to this page. 
 		 * If there are less than 10 then leave the remainder of the grid blank.
 		 */
+		
+		//retrieves most recent 10 statuses/notifications
 		ArrayList<Post> arr = PostController.showNewsFeedPosts(email);
+		
+		//should always return 10 or less posts, otherwise an error has occured
 		if (arr.size() > 10){
 			System.out.println("DIDN'T GET 10 POSTS!");
 		}
 		
 		System.out.println("Posts from database (" + arr.size() + "): ");
+		
+		//creates an arraylist of status posts to put on the newsfeed
 		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
 		for (Post p : arr){
 			Date d = new Date(p.getDateAdded()*1000);
@@ -181,7 +189,9 @@ public class NewsFeedPanel extends JPanel {
 				// JTextField
 				
 				String searchEmail = txtExample.getText();
-				if(NewsfeedController.getUserName(searchEmail).equals("")) //user does not exist
+				
+				//user does not exist
+				if(NewsfeedController.getUserName(searchEmail).equals("")) 
 					JOptionPane.showMessageDialog(null, "User with that email does not exist");
 				else
 					container.replace(new ProfilePanel(searchEmail, emailName, container));
