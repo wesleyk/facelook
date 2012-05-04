@@ -25,6 +25,7 @@ public class Server {
 			//ASSUME: As in readme, there will be 5 servers running
 			//with port numbers ranging from 15210 to 15214.
 			int portNum = sc.nextInt();
+			System.out.println("Port number stored.");
 			String dbName = portNum + ".db";
 			
 			u = new UserDAO(dbName);//initialize new database accessor.
