@@ -13,6 +13,7 @@ public class PostComparable implements Comparator<Post>{
 	 
 	/**
 	 * compare function to compare two posts
+	 * returns 1 is post 1 is more recent than post2
 	 */
     @Override
     public int compare(Post p1, Post p2) {
