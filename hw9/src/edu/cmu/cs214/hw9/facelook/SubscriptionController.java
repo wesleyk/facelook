@@ -13,11 +13,24 @@ import json.JSONTokener;
 import json.JSONWriter;
 import edu.cmu.cs214.hw9.db.Constants;
 
+/**
+ * A class for keeping track of subscriptions,
+ * and sending subscription info back and forth from the server
+ * @author Nikhil, Jessica, Wesley
+ *
+ */
 public class SubscriptionController {
 
 	private SubscriptionController() {
 	}
 	
+	/**
+	 * Checks the subscription relationship between 2 users
+	 * 
+	 * @param email1 - email of the subscribing user
+	 * @param email2 - email of the user getting subscribed to
+	 * @return true if email1 is subscribed to email2, false otherwise
+	 */
 	public static boolean isSubscribed(String email1, String email2) {
 		try{
 			//hash email to determine server shard that we go to
@@ -52,6 +65,14 @@ public class SubscriptionController {
 		return false;			
 	}
 	
+	/**
+	 * Modifies the subscription relationship (add or remove)
+	 * between 2 users, depending on the current relationship
+	 * between the 2
+	 * @param emailAdding - user that is adding a subscription
+	 * @param emailAdded - user that is being subscribed to
+	 * @return true if operation was successful, false otherwise
+	 */
 	public static boolean modifySubscription(String emailAdding, String emailAdded){
 		
 		try{
@@ -87,6 +108,11 @@ public class SubscriptionController {
 		return false;	
 	}
 	
+	/**
+	 * Lists all subscriptions of a certain user
+	 * @param email - user that we are checking
+	 * @return a String ArrayList of subscriptions of user 'email'
+	 */
 	public static ArrayList<String> listSubscriptions(String email){
 		
 		try{

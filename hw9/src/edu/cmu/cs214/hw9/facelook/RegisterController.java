@@ -10,12 +10,27 @@ import json.JSONWriter;
 
 import edu.cmu.cs214.hw9.db.Constants;
 
-// get fields from login panel, pass make calls to database
+
+/**
+ * //A class for getting fields from registration panel, 
+ * passes user info to server which gets info from database
+ * and passes that back to the register controller.
+ * @author Nikhil, Jessica, Wesley
+ *
+ */
 public class RegisterController {
 
 	private RegisterController() {
 	}
 	
+	/**
+	 * Registers a new user. Returns false if an error occurs
+	 * 
+	 * @param email - email of person that's registering
+	 * @param password - user's password
+	 * @param name - user's name
+	 * @return true if registration succeeded, false otherwise
+	 */
 	public static boolean register(String email, String password, String name){
 		try{
 			
