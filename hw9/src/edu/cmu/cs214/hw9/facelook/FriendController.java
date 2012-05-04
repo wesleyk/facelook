@@ -12,8 +12,6 @@ import json.JSONObject;
 import json.JSONTokener;
 import json.JSONWriter;
 
-import edu.cmu.cs214.hw9.db.Constants;
-
 /**
  * Purpose: sets up server requests to get friend related info
  * @author Wesley, Jessica, Nikhil

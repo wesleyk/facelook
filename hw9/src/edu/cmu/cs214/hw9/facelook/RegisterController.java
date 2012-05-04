@@ -8,9 +8,6 @@ import java.net.Socket;
 
 import json.JSONWriter;
 
-import edu.cmu.cs214.hw9.db.Constants;
-
-
 /**
  * //A class for getting fields from registration panel, 
  * passes user info to server which gets info from database

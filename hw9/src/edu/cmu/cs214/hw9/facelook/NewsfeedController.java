@@ -5,14 +5,24 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import edu.cmu.cs214.hw9.db.Constants;
-
+/**
+ * Purpose: grab name based on email
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class NewsfeedController {
 
+	/**
+	 * Constructor
+	 */
 	private NewsfeedController() {
 	}
 
-	
+	/**
+	 * Get name
+	 * @param email email
+	 * @return name
+	 */
 	public static String getUserName(String email){
 		
 		try{
