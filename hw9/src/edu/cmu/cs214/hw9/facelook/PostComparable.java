@@ -4,9 +4,16 @@ import java.util.Comparator;
 
 import edu.cmu.cs214.hw9.db.Post;
 
-//used for sorting posts
+/**
+ * Purpose: used to compare posts
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class PostComparable implements Comparator<Post>{
 	 
+	/**
+	 * compare function to compare two posts
+	 */
     @Override
     public int compare(Post p1, Post p2) {
     	long date1 = p1.getDateAdded();

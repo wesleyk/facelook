@@ -14,11 +14,25 @@ import json.JSONWriter;
 
 import edu.cmu.cs214.hw9.db.Constants;
 
+/**
+ * Purpose: sets up server requests to get friend related info
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class FriendController {
 
+	/**
+	 * Constructor
+	 */
 	private FriendController() {
 	}
 
+	/**
+	 * Determine if email1 is actual friends with email2
+	 * @param email1 first user
+	 * @param email2 second user
+	 * @return whether or not they are actual friends
+	 */
 	public static boolean isActualFriends(String email1, String email2) {
 		try{
 			
@@ -66,6 +80,12 @@ public class FriendController {
 		return false;
 	}
 	
+	/**
+	 * Modify the friend relationship between the two users
+	 * @param emailModifying user 1, one who clicked the add/remove friend button
+	 * @param emailModified user 2
+	 * @return whether or not the request was successful
+	 */
 	public static boolean modifyFriend(String emailModifying, String emailModified){
 		
 		try{
@@ -112,7 +132,11 @@ public class FriendController {
 		
 	}
 	
-	//want to get both friends and pending friends
+	/**
+	 * Return all friends for a given user
+	 * @param email username
+	 * @return two lists, one with actual friends and one with pending friends
+	 */
 	public static ArrayList<ArrayList<String>> listFriends(String email){
 		
 		try{
