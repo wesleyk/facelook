@@ -129,13 +129,130 @@ public class PostsDAO extends SQLiteAdapter {
 	 * the user's subscriptions
 	 * 3) Find aggregate ten most recent posts from the twenty
 	 * @param email user that newsfeed will be found for
+	 * @param friends list of friends
+	 * @param subscriptions list of subscriptions
 	 * @return ArrayList of Posts that represent the newsfeed
 	 */
-	public ArrayList<Post> getNewsFeed (String email){
+	public ArrayList<Post> getNewsFeed (String email, JSONArray friends, JSONArray subscriptions){
+		ArrayList<Post> friendPosts = new ArrayList<Post>(10);
+		ArrayList<Post> subPosts = new ArrayList<Post>(10);
 		ArrayList<Post> ret = new ArrayList<Post>(10);
+		
+		ArrayList<String> friendList = new ArrayList<String>();
+		
 		ResultSet rs = null;
+		PreparedStatement ps;
+		
+		//large sql statements for ten most recent friends/subscriptions posts
+		String friendSQL = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email = \"" + email + "\""; 
+		String subSQL= "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE is_status = 0";
+		boolean firstSub = true;
 		try {
 			
+			/*********************************************/
+			/*********************************************/
+			/***** GET FRIENDS AND SUBSCRIPTIONS *********/
+			/********* AND SETUP SQL STATEMENTS **********/
+			/*********************************************/
+			
+			for (int i = 0; i < friends.length(); i++){
+				JSONObject j = friends.getJSONObject(i);
+				if(!j.getBoolean("pending")) {
+					friendList.add(j.getString("friend"));
+					friendSQL += " OR email = \"" + j.getString("friend") + "\"";
+				}
+			}
+			
+			friendSQL += " ORDER BY date_added DESC LIMIT 10;";
+			
+			for (int i = 0; i < subscriptions.length(); i++){
+				JSONObject j = subscriptions.getJSONObject(i);
+				String sub = j.getString("subscription");
+				
+				// only include in list of subscriptions if the user is
+				// not already a friend
+				if(!friendList.contains(sub)) {
+					if(firstSub) {
+						subSQL += " AND ";
+						firstSub = false;
+					}
+					
+					subSQL += "email = \"" + sub + "\" OR ";
+				}
+			}
+			
+			/***************************/
+			/***************************/
+			/***** EXECUTE SQL *********/
+			/***************************/
+			/***************************/
+			ps = conn.prepareStatement(friendSQL);
+			rs = ps.executeQuery();
+			while(rs.next()) {
+				friendPosts.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getLong("date_added")));
+			}
+			if(rs != null) {
+				rs.close();
+			}
+			
+			//only execute the subscription statement if the user actually has subscriptions
+			if(!firstSub) {
+				subSQL = subSQL.substring(0,subSQL.length()-3);
+				subSQL += " ORDER BY date_added DESC LIMIT 10;";
+				ps = conn.prepareStatement(subSQL);
+				rs = ps.executeQuery();
+				while(rs.next()) {
+					subPosts.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getLong("date_added")));
+				}
+				if(rs != null) {
+					rs.close();
+				}
+			}
+			
+			System.out.println(friendSQL);
+			System.out.println(subSQL);
+			
+			
+			/*******************************************/
+			/*******************************************/
+			/***** RETRIEVE TEN MOST RECENT POSTS ******/
+			/*******************************************/
+			/*******************************************/
+			//perform a sort of "merge" to retrieve ten most recent posts
+			int friendIndex = 0;
+			int subIndex = 0;
+			int fPostsSize = friendPosts.size();
+			int sPostsSize = subPosts.size();
+			
+			while(ret.size() < 10 && (friendIndex < fPostsSize ||
+									  subIndex < sPostsSize)) {
+				if(friendIndex >= fPostsSize) {
+					ret.add(subPosts.get(subIndex));
+					subIndex++;
+					continue;
+				}
+				
+				else if(subIndex >= sPostsSize) {
+					ret.add(friendPosts.get(friendIndex));
+					friendIndex++;
+					continue;
+				}
+				
+				Post friendPost = friendPosts.get(friendIndex);
+				Post subPost = subPosts.get(subIndex);
+				
+				//friend post should be added
+				if(friendPost.getDateAdded() < subPost.getDateAdded()) {
+					ret.add(friendPost);
+					friendIndex++;
+				}
+				
+				//subscription post should be added
+				else {
+					ret.add(subPost);
+					subIndex++;
+				}
+			}
 			
 		}
 		catch (Exception e){
