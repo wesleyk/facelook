@@ -34,10 +34,23 @@ public class Server {
 			//ASSUME: As in the README, there will be 5 servers running
 			//with port numbers ranging from 15210 to 15214.
 			//make sure port numbers are valid (sanity checks)
-			int portNum = sc.nextInt();
-			while (portNum < 15210 || portNum > 15214){
-				System.out.println("Port number must be from 15210, 15211, 15212, 15213 or 15214. Please try again (and read the README). ");
-				portNum = sc.nextInt();
+			boolean a = true;
+			int portNum = 0;
+			while (a && (portNum < 15210 || portNum > 15214)){
+				try{
+					portNum = sc.nextInt();
+					if (portNum >= 15210 && portNum <= 15214){
+						a = false;
+					}
+					else{
+						System.out.println("Port number must be from 15210, 15211, 15212, 15213 or 15214. Please try again (and read the README):");
+						portNum = 0;
+					}
+				}
+				catch (Exception e){
+					System.out.println("Port number must be from 15210, 15211, 15212, 15213 or 15214. Please try again (and read the README):");
+					portNum = 0;
+				}
 			}
 			
 			System.out.println("Port number stored.");
