@@ -50,7 +50,9 @@ public class FriendListPanel extends JPanel {
 		scrollPane1.setViewportView(panel);
 		panel.setLayout(new GridLayout(0, 1, 0, 5));
 		
+		//Retrieves 2 ArrayLists of friends - current friends, and pending friends
 		ArrayList<ArrayList<String>> friendLists = FriendController.listFriends(email);
+		
 		/******************************/
 		/******************************/
 		/****** PENDING FRIENDS *******/
@@ -69,15 +71,19 @@ public class FriendListPanel extends JPanel {
 		}
 		
 		for(String friendPending: friends){
+			
+			//ignore empty strings
 			if(friendPending.length() == 0) {
 				continue;
 			}
 
+			//declares email as a final String to pass in to creation of new ProfilePanel
 			final String pendingName = friendPending;
+			
 			String userName = NewsfeedController.getUserName(friendPending);
 			JButton friendButton = new JButton(userName);
 			friendButton.addActionListener(new ActionListener(){   
-				//when you press the pending friend button, should accept the friend request?
+				//when you press the pending friend button, should go to that user's profile
 				public void actionPerformed(ActionEvent e){
 					
 					container.replace(new ProfilePanel(pendingName, email, container));
@@ -118,16 +124,19 @@ public class FriendListPanel extends JPanel {
 		 */
 		ArrayList<String> friends2 = new ArrayList<String>();
 		
+		//gets list of actual friends
 		if(friendLists != null) {
 			friends2 = friendLists.get(0);
 		}
 		
 		for(String friend: friends2){
+			//ignore empty strings
 			if(friend.length() == 0) {
 				continue;
 			}
 			
-			final String friendName = friend; //so I can pass this along to the ProfilePanel
+			//declare as final so we can pass this along to the ProfilePanel
+			final String friendName = friend; 
 			String userName = NewsfeedController.getUserName(friend);
 			JButton friendButton = new JButton(userName);
 			friendButton.addActionListener(new ActionListener(){   

@@ -59,7 +59,7 @@ public class SubscriptionListPanel extends JPanel {
 		ArrayList<String> subs = SubscriptionController.listSubscriptions(email);
 		for(String sub: subs){
 			
-			final String subName = sub; //so I can pass this along to the ProfilePanel
+			final String subName = sub; //to pass this along to the ProfilePanel
 			String userName = NewsfeedController.getUserName(sub);
 			JButton friendButton = new JButton(userName);
 			friendButton.addActionListener(new ActionListener(){   
