@@ -8,7 +8,18 @@ import json.JSONArray;
 import json.JSONException;
 import json.JSONObject;
 
+/**
+ * Purpose: Database accessor for subscription related queries
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class SubscriptionsDAO extends SQLiteAdapter {
+	
+	/**
+	 * Constructor
+	 * @param dbName name of the database that will be connected
+	 * @throws Exception e
+	 */
 	public SubscriptionsDAO(String dbName) throws Exception{
 		super(dbName);
 	}
@@ -51,7 +62,7 @@ public class SubscriptionsDAO extends SQLiteAdapter {
 	 * Modify subscription status of emailSubscriber to emailSubscribed
 	 * @param emailSubscriber user who's either subscribing or unsubscribing
 	 * @param emailSubscribed user who's being subscribed or unsubscribed to
-	 * @return
+	 * @return Whether or not the query was successful
 	 */
 	public boolean modifySubscription(String emailSubscriber, String emailSubscribed) {
 		

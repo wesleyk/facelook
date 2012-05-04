@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import json.JSONArray;
 import json.JSONObject;
 
+/**
+ * Purpose: Database accessor for friend related queries
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class PostsDAO extends SQLiteAdapter {
 	
 	//linked hash map that represents a cache.
@@ -15,6 +20,11 @@ public class PostsDAO extends SQLiteAdapter {
 	//maps to an arraylist of posts from that user
 	protected Cache<CacheKey, ArrayList<Post>> cache;
 	
+	/**
+	 * Constructor
+	 * @param dbName name of the database that will be connected
+	 * @throws Exception e
+	 */
 	public PostsDAO(String dbName) throws Exception{
 		super(dbName);
 		//creates cache with a capacity of 10 sets of posts
@@ -22,8 +32,8 @@ public class PostsDAO extends SQLiteAdapter {
 	}
 	/**
 	 * Gets posts by the given email sorted in descending order of date (most recent first)
-	 * @param email
-	 * @return
+	 * @param email username
+	 * @return arraylist of up to ten posts
 	 */
 	public ArrayList<Post> topTenPostsByEmail (String email){
 		
@@ -58,7 +68,8 @@ public class PostsDAO extends SQLiteAdapter {
 				return ret;
 			}
 			while (rs.next()){
-				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getLong("date_added")));
+				ret.add(new Post(rs.getString("email"), rs.getString("content"),
+								rs.getInt("is_status"), rs.getLong("date_added")));
 			}
 			
 		}
@@ -97,7 +108,11 @@ public class PostsDAO extends SQLiteAdapter {
 		return ret;
 	}
 	
-	
+	/**
+	 * Retrieve top ten notifications based on email
+	 * @param email username
+	 * @return arraylist of up to ten posts
+	 */
 	public ArrayList<Post> topTenNotificationsByEmail (String email){
 		ArrayList<Post> ret = new ArrayList<Post>(10);
 		
@@ -130,7 +145,8 @@ public class PostsDAO extends SQLiteAdapter {
 				return ret;
 			}
 			while (rs.next()){
-				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getLong("date_added")));
+				ret.add(new Post(rs.getString("email"), rs.getString("content"),
+								rs.getInt("is_status"), rs.getLong("date_added")));
 			}
 			
 		}
@@ -168,6 +184,14 @@ public class PostsDAO extends SQLiteAdapter {
 		return ret;
 	}
 	
+	/**
+	 * Store new post in the database and do necessary caching tasks
+	 * @param email username
+	 * @param content content of post
+	 * @param is_status whether or not the post was a status
+	 * @param date_added date post was made
+	 * @return whether or not the store was successful
+	 */
 	public boolean createPost (String email, String content, int is_status, long date_added){
 		if (!(is_status == 0 || is_status ==1)){
 			System.out.println("IS_STATUS CANNOT BE ANYTHING OTHER THAN 0 OR 1!");
@@ -276,6 +300,11 @@ public class PostsDAO extends SQLiteAdapter {
 		return true;
 	}
 	
+	/**
+	 * Purpose: convert post to JSON object
+	 * @param p post
+	 * @return post as jsonobject
+	 */
 	public JSONObject convertPostToJSON (Post p){
 		JSONObject j = new JSONObject();
 		try{
@@ -290,6 +319,11 @@ public class PostsDAO extends SQLiteAdapter {
 		return j;
 	}
 	
+	/**
+	 * Purpose: convert list of posts to json array
+	 * @param l list of posts
+	 * @return list of posts as json array
+	 */
 	public JSONArray convertToJSONArray (ArrayList<Post> l){
 		JSONArray a = new JSONArray();
 		for (Post p : l){

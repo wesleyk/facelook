@@ -7,7 +7,18 @@ import json.JSONArray;
 import json.JSONException;
 import json.JSONObject;
 
+/**
+ * Purpose: Database accessor for friend related queries
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class FriendsDAO extends SQLiteAdapter {
+	
+	/**
+	 * Constructor
+	 * @param dbName name of the database that will be connected
+	 * @throws Exception e
+	 */
 	public FriendsDAO(String dbName) throws Exception{
 		super(dbName);
 	}

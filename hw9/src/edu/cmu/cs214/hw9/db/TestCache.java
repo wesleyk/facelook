@@ -18,8 +18,8 @@ public class TestCache {
 		createPost("1","1",1,2);
 		createPost("3","3",0,3);
 		createPost("3","3",1,3);
-		createPost("1","1",0,2);
-		createPost("1","1",1,2);
+		createPost("2","2",0,2);
+		createPost("2","2",1,2);
 		
 		Set<Entry<CacheKey,ArrayList<Post>>> entries = cache.entrySet();
 		Iterator<Entry<CacheKey,ArrayList<Post>>> itr = entries.iterator();

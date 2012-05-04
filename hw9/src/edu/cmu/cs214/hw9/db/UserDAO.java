@@ -5,11 +5,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Purpose: Database accessor for subscription related queries
+ * @author Wesley, Jessica, Nikhil
+ *
+ */
 public class UserDAO extends SQLiteAdapter {
+	
+	/**
+	 * Constructor
+	 * @param dbName name of the database that will be connected
+	 * @throws Exception e
+	 */
 	public UserDAO(String dbName) throws Exception{
 		super(dbName);
 	}
 	
+	/**
+	 * Return all the users
+	 * @return list of users
+	 */
 	public ArrayList<User> allUsers(){
 		String statement = "SELECT * FROM " + Constants.USERS_TABLE;
 		ArrayList<User> ret = new ArrayList<User>();
@@ -30,6 +45,11 @@ public class UserDAO extends SQLiteAdapter {
 		return ret;
 	}
 
+	/**
+	 * Return user based on username
+	 * @param email email
+	 * @return user associated to that username
+	 */
 	public User findUser(String email){
 		User ret = null;
 		ResultSet rs = null;
@@ -58,6 +78,12 @@ public class UserDAO extends SQLiteAdapter {
 		return ret;
 	}
 	
+	/**
+	 * Authenticate user based on email and passowrd
+	 * @param email user email
+	 * @param password user password
+	 * @return whether or not the email and password link to the same user
+	 */
 	public boolean authenticateUser(String email, String password) {
 		User lookup = findUser(email);
 		if(lookup == null){
@@ -67,6 +93,13 @@ public class UserDAO extends SQLiteAdapter {
 		return password.equals(lookup.getPassword());
 	}
 	
+	/**
+	 * Create a new user to the db
+	 * @param email email
+	 * @param password password
+	 * @param name name
+	 * @return whether or not the store was successful
+	 */
 	public boolean createUser(String email, String password, String name){
 		User lookup = findUser(email);
 		
