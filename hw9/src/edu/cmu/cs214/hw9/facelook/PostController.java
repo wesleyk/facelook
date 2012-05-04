@@ -157,12 +157,19 @@ public class PostController {
 			ArrayList<Post> posts = new ArrayList<Post>();
 			for(int i = 0; i < friends.size(); i++) {
 				ArrayList<Post> friendPosts = showPosts(email,friends.get(i));
+				System.out.println(friends.get(i));
 				for(int j = 0; j < friendPosts.size(); j++) {
 					posts.add(friendPosts.get(j));
 				}
 			}
 			
 			for(int i = 0; i < subscriptions.size(); i++) {
+				//don't double count if user is friends and subscribed to same person
+				if(friends.contains(subscriptions.get(i))) {
+					continue;
+				}
+				
+				System.out.println(subscriptions.get(i));
 				ArrayList<Post> subPosts = showPosts(email, subscriptions.get(i));
 				for(int j = 0; j < subPosts.size(); j++) {
 					posts.add(subPosts.get(j));
