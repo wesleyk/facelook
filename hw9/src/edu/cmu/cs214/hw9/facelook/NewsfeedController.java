@@ -16,7 +16,10 @@ public class NewsfeedController {
 	public static String getUserName(String email){
 		
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (email.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 

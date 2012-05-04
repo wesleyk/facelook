@@ -9,8 +9,8 @@ import json.JSONException;
 import json.JSONObject;
 
 public class SubscriptionsDAO extends SQLiteAdapter {
-	public SubscriptionsDAO() throws Exception{
-		super();
+	public SubscriptionsDAO(String dbName) throws Exception{
+		super(dbName);
 	}
 
 	/**

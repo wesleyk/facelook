@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserDAO extends SQLiteAdapter {
-	public UserDAO() throws Exception{
-		super();
+	public UserDAO(String dbName) throws Exception{
+		super(dbName);
 	}
 	
 	public ArrayList<User> allUsers(){

@@ -21,9 +21,17 @@ public class FriendController {
 
 	public static boolean isActualFriends(String email1, String email2) {
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
-			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+			
+			//want to put friend relationships in multiple shards
+			int portNum1 = (email1.hashCode() % 5) + 15210;
+			int portNum2 = (email2.hashCode() % 5) + 15210;
+				
+			Socket mySocket1 = new Socket("localhost", portNum1);
+			Socket mySocket2 = new Socket("localhost", portNum2);
+			PrintWriter out1 = new PrintWriter(mySocket1.getOutputStream(), true);
+			PrintWriter out2 = new PrintWriter(mySocket2.getOutputStream(), true);
+			BufferedReader in1 = new BufferedReader(new InputStreamReader(mySocket1.getInputStream()));
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(mySocket2.getInputStream()));
 
 			StringWriter myWriter = new StringWriter();
 			JSONWriter jsonW = new JSONWriter(myWriter);
@@ -35,11 +43,21 @@ public class FriendController {
 			jsonW.endObject();//finish object
 			String message = myWriter.toString();//creates a string serializing the object
 			
-			out.println("ISACTUALFRIENDS "+ message);//request the information for email
 			
-			String response = in.readLine();
+			out1.println("ISACTUALFRIENDS "+ message);//request the information for email
+			String response1 = in1.readLine();
 			
-			return response.contains("FRIENDS");
+			if(portNum1 != portNum2){
+				
+				out2.println("ISACTUALFRIENDS "+ message);
+				String response2 = in2.readLine();
+				
+				return (response1.contains("FRIENDS") && response2.contains("FRIENDS"));
+				
+			}
+			
+			
+			return response1.contains("FRIENDS");
 		}
 		catch (Exception e){
 			// TODO Auto-generated catch block
@@ -51,9 +69,15 @@ public class FriendController {
 	public static boolean modifyFriend(String emailModifying, String emailModified){
 		
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
-			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
+			int portNum1 = (emailModifying.hashCode() % 5) + 15210;
+			int portNum2 = (emailModified.hashCode() % 5) + 15210;
+				
+			Socket mySocket1 = new Socket("localhost", portNum1);
+			Socket mySocket2 = new Socket("localhost", portNum2);
+			PrintWriter out1 = new PrintWriter(mySocket1.getOutputStream(), true);
+			PrintWriter out2 = new PrintWriter(mySocket2.getOutputStream(), true);
+			BufferedReader in1 = new BufferedReader(new InputStreamReader(mySocket1.getInputStream()));
+			BufferedReader in2 = new BufferedReader(new InputStreamReader(mySocket2.getInputStream()));
 
 			StringWriter myWriter = new StringWriter();
 			JSONWriter jsonW = new JSONWriter(myWriter);
@@ -65,11 +89,19 @@ public class FriendController {
 			jsonW.endObject();//finish object
 			String message = myWriter.toString();//creates a string serializing the object
 			
-			out.println("MODIFYFRIEND "+ message);//request the information for email
+			out1.println("MODIFYFRIEND "+ message);//request the information for email
+			String response1 = in1.readLine();
 			
-			String response = in.readLine();
+			if(portNum1 != portNum2){
+				
+				out2.println("MODIFYFRIEND "+ message);
+				String response2 = in2.readLine();
+				
+				return (response1.contains("SUCCESS") && response2.contains("SUCCESS"));
+				
+			}
 			
-			return response.contains("SUCCESS");
+			return response1.contains("SUCCESS");
 			
 		}
 		catch (Exception e){
@@ -84,7 +116,9 @@ public class FriendController {
 	public static ArrayList<ArrayList<String>> listFriends(String email){
 		
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			int serverPort = (email.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 

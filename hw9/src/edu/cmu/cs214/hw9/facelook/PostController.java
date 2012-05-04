@@ -21,7 +21,10 @@ public class PostController {
 	
 	public static boolean doPost(String email, String content, int is_status, long date_added){
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (email.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
@@ -59,7 +62,10 @@ public class PostController {
 	
 	public static ArrayList<Post> showPosts(String email1, String email2){
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (email1.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 			

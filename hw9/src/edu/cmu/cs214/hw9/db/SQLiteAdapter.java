@@ -5,9 +5,9 @@ import java.sql.*;
 public class SQLiteAdapter {
 	protected Connection conn;
 	
-	public SQLiteAdapter() throws Exception {
+	public SQLiteAdapter(String dbName) throws Exception {
 		Class.forName(Constants.JDBC_NAME);//loads the driver
-		conn = DriverManager.getConnection("jdbc:sqlite:214hw9.db");//connects to the database. 
+		conn = DriverManager.getConnection("jdbc:sqlite:" + dbName);//connects to the database. 
 		//214hw9.db is the name of the database in this case, can be changed to anything *.db
 	}
 	

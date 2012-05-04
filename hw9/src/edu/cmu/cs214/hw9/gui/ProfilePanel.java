@@ -128,7 +128,7 @@ public class ProfilePanel extends JPanel {
 				// TODO FILL IN CODE TO SUBSCRIBE TO USER
 				if(SubscriptionController.modifySubscription(emailUser, emailName)){
 					
-					JOptionPane.showMessageDialog(null, "Added/removed subscription to " + emailUser);
+					JOptionPane.showMessageDialog(null, "Added/removed subscription to " + emailName);
 				}
 				else{
 					

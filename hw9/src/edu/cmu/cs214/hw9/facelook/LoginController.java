@@ -18,7 +18,11 @@ public class LoginController {
 	
 	public static boolean login(String email, String password){
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			
+			//hash email to determine server shard that we go to
+			int serverPort = (email.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
