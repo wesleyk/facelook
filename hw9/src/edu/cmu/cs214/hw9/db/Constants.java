@@ -6,7 +6,6 @@ package edu.cmu.cs214.hw9.db;
  *
  */
 public class Constants {
-	public static final int SERVER_PORT = 15214; //server port used before sharding
 	public static final String JDBC_NAME = "org.sqlite.JDBC";//Java database connectivity driver for sqlite
 	public static final int TIMEOUT = 30000;
 	
@@ -20,4 +19,8 @@ public class Constants {
 	public static final int CACHE_SIZE = 10;
 
 	public static final int MAX_POSTS = 10;
+	
+	//server constants
+	public static final int SERVER_PORT_BASE = 15210;
+	public static final int NUM_SHARDS = 5;
 }

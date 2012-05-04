@@ -11,14 +11,28 @@ import json.JSONWriter;
 import edu.cmu.cs214.hw9.db.Constants;
 
 // get fields from login panel, pass make calls to database
+/**
+ * This is the login controller. It is used to handle the connection between
+ * the server and the login details during login from the app.
+ * @author nikhil, wesley, jessica
+ *
+ */
 public class LoginController {
 
 	private LoginController() {
 	}
 	
+	/**
+	 * This methods tries to log in the user with the email and password.
+	 * It uses a login protocol and sends the login information parsed as
+	 * JSON data to the server, which sends back a response. It sends a
+	 * success if the login was successful, and fail if it wasnt.
+	 * @param email
+	 * @param password
+	 * @return
+	 */
 	public static boolean login(String email, String password){
 		try{
-			
 			//hash email to determine server shard that we go to
 			int serverPort = (email.hashCode() % 5) + 15210;
 			
