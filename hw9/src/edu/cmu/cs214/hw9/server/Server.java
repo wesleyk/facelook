@@ -33,11 +33,17 @@ public class Server {
 			
 			//ASSUME: As in the README, there will be 5 servers running
 			//with port numbers ranging from 15210 to 15214.
+			//make sure port numbers are valid (sanity checks)
 			int portNum = sc.nextInt();
+			while (portNum < 15210 || portNum > 15214){
+				System.out.println("Port number must be from 15210, 15211, 15212, 15213 or 15214. Please try again (and read the README). ");
+				portNum = sc.nextInt();
+			}
+			
 			System.out.println("Port number stored.");
 			String dbName = portNum + ".db";
 
-			//initialize new database accessors
+			// initialize new database accessors
 			u = new UserDAO(dbName);
 			f = new FriendsDAO(dbName);
 			s = new SubscriptionsDAO(dbName);
