@@ -1,9 +1,12 @@
 package edu.cmu.cs214.hw9.db;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class SQLiteAdapter {
 	protected Connection conn;
+	
 	
 	public SQLiteAdapter(String dbName) throws Exception {
 		Class.forName(Constants.JDBC_NAME);//loads the driver

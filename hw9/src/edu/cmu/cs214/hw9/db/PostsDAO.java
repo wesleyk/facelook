@@ -4,13 +4,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import json.JSONArray;
 import json.JSONObject;
 
 public class PostsDAO extends SQLiteAdapter {
+	
+	//linked hash map that represents a cache.
+	//a cachekey (email + indicator of whether the user is a friend)
+	//maps to an arraylist of posts from that user
+	protected LinkedHashMap<CacheKey, ArrayList<Post>> cache;
+	
 	public PostsDAO(String dbName) throws Exception{
 		super(dbName);
+		//creates cache with an initial capacity of 10 sets of posts
+		cache = new LinkedHashMap<CacheKey, ArrayList<Post>>(Constants.CACHE_SIZE);
 	}
 	/**
 	 * Gets posts by the given email sorted in descending order of date (most recent first)
@@ -18,7 +27,17 @@ public class PostsDAO extends SQLiteAdapter {
 	 * @return
 	 */
 	public ArrayList<Post> topTenPostsByEmail (String email){
+		
 		ArrayList<Post> ret = new ArrayList<Post>(10);
+		
+		CacheKey myKey = new CacheKey(email, true);
+		ArrayList<Post> retPosts = cache.get(myKey);
+		if(retPosts != null){
+			
+			return retPosts;
+			
+		}
+		
 		ResultSet rs = null;
 		try {
 			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email=? ORDER BY date_added DESC LIMIT 10;";
@@ -49,12 +68,32 @@ public class PostsDAO extends SQLiteAdapter {
             	e.printStackTrace();
             }
         }
+		
+		//put posts in cache
+		if(ret != null){
+			
+			if(cache.size() == Constants.CACHE_SIZE)
+				
+				
+			cache.put(myKey, ret);
+			
+		}
+		
 		return ret;
 	}
 	
 	
 	public ArrayList<Post> topTenNotificationsByEmail (String email){
 		ArrayList<Post> ret = new ArrayList<Post>(10);
+		
+		CacheKey myKey = new CacheKey(email, false); //false = just get notifications
+		ArrayList<Post> retPosts = cache.get(myKey);
+		if(retPosts != null){
+			
+			return retPosts;
+			
+		}
+		
 		ResultSet rs = null;
 		try {
 			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email=? AND is_status=0 ORDER BY date_added DESC LIMIT 10;";
@@ -84,40 +123,16 @@ public class PostsDAO extends SQLiteAdapter {
             	e.printStackTrace();
             }
         }
-		return ret;
-	}
-	
-	public ArrayList<Post> topTenStatusesByEmail (String email){
-		ArrayList<Post> ret = new ArrayList<Post>(10);
-		ResultSet rs = null;
-		try {
-			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email=? AND is_status=1 ORDER BY date_added DESC LIMIT 10;";
-			PreparedStatement ps = conn.prepareStatement(statement);
-			ps.setString(1, email);
-			rs = ps.executeQuery();
-			if(!rs.isBeforeFirst()) {
-				System.out.println("no posts by user with email " + email + "(in PostsDAO.java)");
-				return ret;
-			}
-			while (rs.next()){
-				ret.add(new Post(rs.getString("email"), rs.getString("content"), rs.getInt("is_status"), rs.getLong("date_added")));
-			}
+		
+		//put posts in cache
+		if(ret != null){
+			
+			cache.put(myKey, ret);
+			//need to check removeeldestentry?
+			//or is it automatic?
 			
 		}
-		catch (Exception e){
-			System.out.println("Error in postsDAO.java allPostsByEmail method");
-			e.printStackTrace();
-		}
-		finally {
-            try{
-            	if(rs != null){
-            		rs.close();
-            	}
-            } catch (SQLException e){
-            	System.out.println("error in closing resultset (in PostsDAO.java)");
-            	e.printStackTrace();
-            }
-        }
+		
 		return ret;
 	}
 	
