@@ -28,7 +28,7 @@ public class LoginController {
 	 * success if the login was successful, and fail if it wasnt.
 	 * @param email
 	 * @param password
-	 * @return
+	 * @return - if login was successful or not
 	 */
 	public static boolean login(String email, String password){
 		try{

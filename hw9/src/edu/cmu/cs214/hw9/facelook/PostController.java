@@ -16,34 +16,57 @@ import json.JSONWriter;
 import edu.cmu.cs214.hw9.db.Constants;
 import edu.cmu.cs214.hw9.db.Post;
 
+/**
+ * This is the posts controller. It is used to make connections between
+ * posts that come in from the gui, and need to interact with the backend
+ * database. We have various operations we can do with posts, and each is
+ * separated into different functions.
+ * @author nikhil, wesley, jessica
+ *
+ */
 public class PostController {
 
 	private PostController() {
 	}
 	
+	/**
+	 * This function makes a post into the database. Depending on the is_status
+	 * argument, we check if the post is to be a status or notification and 
+	 * send the necessary protocol command for that. It is very similar
+	 * in functionality to the login function in the login controller.
+	 * @param email - email of the poster
+	 * @param content - content of post
+	 * @param is_status - status or notification
+	 * @param date_added - date of creation of post
+	 * @return
+	 */
 	public static boolean doPost(String email, String content, int is_status, long date_added){
 		try{
 			//hash email to determine server shard that we go to
-			int serverPort = (email.hashCode() % 5) + 15210;
+			int serverPort = (email.hashCode() % Constants.NUM_SHARDS) + Constants.SERVER_PORT_BASE;
 			
+			// create socket for the needed port to connect to server
 			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
+			// create JSON writer objects to serialize information about
+			// post, and then send that information
 			StringWriter myWriter = new StringWriter();
 			JSONWriter jsonW = new JSONWriter(myWriter);
-			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
+			jsonW.object();//start object
 			jsonW.key("email");//key
 			jsonW.value(email);//value at key
 			jsonW.key("content");//key
 			jsonW.value(content);//value at key
-			jsonW.key("is_status");
-			jsonW.value(is_status);
-			jsonW.key("date_added");
-			jsonW.value(date_added);
+			jsonW.key("is_status"); // key
+			jsonW.value(is_status); //value
+			jsonW.key("date_added"); // key
+			jsonW.value(date_added); // value
 			jsonW.endObject();//finish object
 			String message = myWriter.toString();//creates a string serializing the object
 
+			// Send the needed protocol command depending on the is_status argument
 			if (is_status == 1){
 				out.println("POST STATUS "+message);
 			}
@@ -51,52 +74,73 @@ public class PostController {
 				out.println("POST NOTIF "+message);
 			}
 			
+			// read in response from server
 			String response = in.readLine();
 			
 			return response.contains("SUCCESS");
 		}
 		catch (Exception e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
 	
+	/**
+	 * This function is used to get all the posts that must be shown somewhere
+	 * on the app
+	 * @param email1 - the email of the profile being viewed
+	 * @param email2 - email of the user viewing profile of email1
+	 * @return - array list of the posts to show
+	 */
 	public static ArrayList<Post> showPosts(String email1, String email2){
 		try{
 			//hash email to determine server shard that we go to
-			int serverPort = (email1.hashCode() % 5) + 15210;
+			int serverPort = (email1.hashCode() % Constants.NUM_SHARDS) + Constants.SERVER_PORT_BASE;
 			
+			// create socket with the server on the needed port
 			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 			
+			// create JSON writer object to send the 2 emails to the server
 			StringWriter myWriter = new StringWriter();
 			JSONWriter jsonW = new JSONWriter(myWriter);
-			jsonW.object();//start object (refer to JSONWriter javadoc for a more in depth explanation of creation)
+			jsonW.object();//start object
 			
-			// friends see both notifications and statuses, and subscribers see only statuses.
+			// friends see notifications and statuses, and subscribers see only statuses.
 			if (FriendController.isActualFriends(email1, email2) || email1.equals(email2)){
+				
 				jsonW.key("email");//key
 				jsonW.value(email1);//value at key
 				jsonW.endObject();//finish object
 				String message = myWriter.toString();//creates a string serializing the object
 				
+				// send necessary protocol command to the server
 				out.println("GET STATUS AND NOTIF "+ message);
+				
+				// read in response from the server
 				String response = in.readLine();
-				System.out.println("response in GET STATUS AND NOTIF: " + response);
-				// read in response from server in the form of string, then use JSON tokener to parse it, and get the array list of posts
+
+				// read in response from server in the form of string, then use JSON 
+				// tokener to parse it, and get the array list of posts
 				JSONArray o = new JSONArray(new JSONTokener(response.substring(8)));
+				
+				// parse the JSONarray to get individual posts
 				ArrayList<Post> arr = new ArrayList<Post>();
+				
 				for (int i = 0; i < o.length(); i++){
 					JSONObject j = o.getJSONObject(i);
 					Post p = new Post(j.getString("email"), j.getString("content"), 
 									  j.getInt("is_status"), j.getLong("date_added"));
 					arr.add(p);
 				}
+				
 				return arr;
 			}
 			else{
+				// the two users are subscribers, show statuses only
+				
+				// add data needed to the JSONWriter
 				jsonW.key("email");//key
 				jsonW.value(email1);//value at key
 				jsonW.endObject();//finish object
@@ -105,9 +149,14 @@ public class PostController {
 				// get top ten statuses
 				out.println("GET NOTIF "+ message);
 				
+				// read response from server
 				String response = in.readLine();
-				// read in response from server in the form of string, then use JSON tokener to parse it, and get the array list of posts
+				
+				// read in response from server in the form of string, then use JSON 
+				// tokener to parse it, and get the array list of posts
 				JSONArray o = new JSONArray(new JSONTokener(response.substring(8)));
+				
+				// parse the JSON array to get individual posts
 				ArrayList<Post> arr = new ArrayList<Post>();
 				for (int i = 0; i < o.length(); i++){
 					JSONObject j = o.getJSONObject(i);
@@ -119,7 +168,6 @@ public class PostController {
 			}
 		}
 		catch (Exception e){
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new ArrayList<Post>();
