@@ -134,10 +134,8 @@ public class NewsFeedPanel extends JPanel {
 		
 		//should always return 10 or less posts, otherwise an error has occured
 		if (arr.size() > 10){
-			System.out.println("DIDN'T GET 10 POSTS!");
+			System.out.println("Error - should not be getting more than 10 posts!");
 		}
-		
-		System.out.println("Posts from database (" + arr.size() + "): ");
 		
 		//creates an arraylist of status posts to put on the newsfeed
 		ArrayList<StatusPost> stArr = new ArrayList<StatusPost>();
@@ -148,10 +146,6 @@ public class NewsFeedPanel extends JPanel {
 			stArr.add(sp);
 			panel.add(sp);
 		}
-		System.out.println("Done printing posts from database!");
-		
-		
-		
 		
 		
 		final JTextField txtExample = new JTextField();
