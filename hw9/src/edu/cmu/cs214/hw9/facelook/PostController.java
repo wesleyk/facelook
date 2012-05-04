@@ -207,7 +207,6 @@ public class PostController {
 			
 			for(int i = 0; i < friends.size(); i++) {
 				ArrayList<Post> friendPosts = showPosts(friends.get(i), email);
-				System.out.println(friends.get(i));
 				for(int j = 0; j < friendPosts.size(); j++) {
 					posts.add(friendPosts.get(j));
 				}
@@ -219,7 +218,6 @@ public class PostController {
 					continue;
 				}
 				
-				System.out.println(subscriptions.get(i));
 				ArrayList<Post> subPosts = showPosts(subscriptions.get(i), email);
 				for(int j = 0; j < subPosts.size(); j++) {
 					posts.add(subPosts.get(j));
