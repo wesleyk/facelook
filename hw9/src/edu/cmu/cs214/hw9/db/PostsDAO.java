@@ -154,7 +154,7 @@ public class PostsDAO extends SQLiteAdapter {
 			/***** GET FRIENDS AND SUBSCRIPTIONS *********/
 			/********* AND SETUP SQL STATEMENTS **********/
 			/*********************************************/
-			
+			/*********************************************/
 			for (int i = 0; i < friends.length(); i++){
 				JSONObject j = friends.getJSONObject(i);
 				if(!j.getBoolean("pending")) {
@@ -242,7 +242,7 @@ public class PostsDAO extends SQLiteAdapter {
 				Post subPost = subPosts.get(subIndex);
 				
 				//friend post should be added
-				if(friendPost.getDateAdded() < subPost.getDateAdded()) {
+				if(friendPost.getDateAdded() > subPost.getDateAdded()) {
 					ret.add(friendPost);
 					friendIndex++;
 				}
