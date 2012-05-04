@@ -8,8 +8,8 @@ import json.JSONException;
 import json.JSONObject;
 
 public class FriendsDAO extends SQLiteAdapter {
-	public FriendsDAO() throws Exception{
-		super();
+	public FriendsDAO(String dbName) throws Exception{
+		super(dbName);
 	}
 
 	/**

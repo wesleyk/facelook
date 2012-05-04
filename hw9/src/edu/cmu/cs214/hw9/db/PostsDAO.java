@@ -9,8 +9,8 @@ import json.JSONArray;
 import json.JSONObject;
 
 public class PostsDAO extends SQLiteAdapter {
-	public PostsDAO() throws Exception{
-		super();
+	public PostsDAO(String dbName) throws Exception{
+		super(dbName);
 	}
 	/**
 	 * Gets posts by the given email sorted in descending order of date (most recent first)

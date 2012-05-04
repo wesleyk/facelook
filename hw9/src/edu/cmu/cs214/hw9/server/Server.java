@@ -1,6 +1,7 @@
 package edu.cmu.cs214.hw9.server;
 
 import java.net.ServerSocket;
+import java.util.Scanner;
 
 import edu.cmu.cs214.hw9.server.ServerThread;
 import edu.cmu.cs214.hw9.db.Constants;
@@ -17,18 +18,22 @@ public class Server {
 		SubscriptionsDAO s = null;
 		PostsDAO p = null;
 		
-		try {
-			u = new UserDAO();//initialize new database accessor.
-			f = new FriendsDAO();
-			s = new SubscriptionsDAO();
-			p = new PostsDAO();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		
-		try {			
+		try {		
+			Scanner sc = new Scanner(System.in);
+			System.out.println("Please enter a port number for this server: ");
+			
+			//ASSUME: As in readme, there will be 5 servers running
+			//with port numbers ranging from 15210 to 15214.
+			int portNum = sc.nextInt();
+			String dbName = portNum + ".db";
+			
+			u = new UserDAO(dbName);//initialize new database accessor.
+			f = new FriendsDAO(dbName);
+			s = new SubscriptionsDAO(dbName);
+			p = new PostsDAO(dbName);
+
 			u.createTables();//create the tables
-			socket = new ServerSocket(Constants.SERVER_PORT);
+			socket = new ServerSocket(portNum);
 			while(true){
 				//spawn a thread to do the work
 				Thread connection = new ServerThread(socket.accept(), u, f, s, p);

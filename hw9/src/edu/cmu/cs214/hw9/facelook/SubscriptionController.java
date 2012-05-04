@@ -20,7 +20,10 @@ public class SubscriptionController {
 	
 	public static boolean isSubscribed(String email1, String email2) {
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (email1.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
@@ -52,7 +55,10 @@ public class SubscriptionController {
 	public static boolean modifySubscription(String emailAdding, String emailAdded){
 		
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (emailAdding.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
@@ -84,7 +90,10 @@ public class SubscriptionController {
 	public static ArrayList<String> listSubscriptions(String email){
 		
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
+			//hash email to determine server shard that we go to
+			int serverPort = (email.hashCode() % 5) + 15210;
+			
+			Socket mySocket = new Socket("localhost", serverPort);
 			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
 
