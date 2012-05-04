@@ -1,8 +1,6 @@
 package edu.cmu.cs214.hw9.db;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class SQLiteAdapter {
 	protected Connection conn;

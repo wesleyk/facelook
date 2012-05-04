@@ -14,12 +14,12 @@ public class PostsDAO extends SQLiteAdapter {
 	//linked hash map that represents a cache.
 	//a cachekey (email + indicator of whether the user is a friend)
 	//maps to an arraylist of posts from that user
-	protected LinkedHashMap<CacheKey, ArrayList<Post>> cache;
+	protected Cache<CacheKey, ArrayList<Post>> cache;
 	
 	public PostsDAO(String dbName) throws Exception{
 		super(dbName);
-		//creates cache with an initial capacity of 10 sets of posts
-		cache = new LinkedHashMap<CacheKey, ArrayList<Post>>(Constants.CACHE_SIZE);
+		//creates cache with a capacity of 10 sets of posts
+		cache = new Cache<CacheKey, ArrayList<Post>>(Constants.CACHE_SIZE);
 	}
 	/**
 	 * Gets posts by the given email sorted in descending order of date (most recent first)
@@ -33,9 +33,7 @@ public class PostsDAO extends SQLiteAdapter {
 		CacheKey myKey = new CacheKey(email, true);
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
-			
 			return retPosts;
-			
 		}
 		
 		ResultSet rs = null;
@@ -69,14 +67,9 @@ public class PostsDAO extends SQLiteAdapter {
             }
         }
 		
-		//put posts in cache
+		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
-			
-			if(cache.size() == Constants.CACHE_SIZE)
-				
-				
 			cache.put(myKey, ret);
-			
 		}
 		
 		return ret;
@@ -89,9 +82,7 @@ public class PostsDAO extends SQLiteAdapter {
 		CacheKey myKey = new CacheKey(email, false); //false = just get notifications
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
-			
 			return retPosts;
-			
 		}
 		
 		ResultSet rs = null;
@@ -124,13 +115,9 @@ public class PostsDAO extends SQLiteAdapter {
             }
         }
 		
-		//put posts in cache
+		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
-			
 			cache.put(myKey, ret);
-			//need to check removeeldestentry?
-			//or is it automatic?
-			
 		}
 		
 		return ret;
