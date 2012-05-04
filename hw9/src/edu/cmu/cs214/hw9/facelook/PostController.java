@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import json.JSONArray;
 import json.JSONObject;
@@ -132,22 +134,55 @@ public class PostController {
 	public static ArrayList<Post> showNewsFeedPosts (String email){
 		// viewing newsfeed for user with email: email
 		try{
-			Socket mySocket = new Socket("localhost", Constants.SERVER_PORT);
-			PrintWriter out = new PrintWriter(mySocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(mySocket.getInputStream()));
-
-			out.println("SHOWNEWSFEED " + email); //request the list by email
 			
-			String response = in.readLine();
-			JSONArray o = new JSONArray(new JSONTokener(response));
-			ArrayList<Post> arr = new ArrayList<Post>();
-			for (int i = 0; i < o.length(); i++){
-				JSONObject j = o.getJSONObject(i);
-				Post p = new Post(j.getString("email"), j.getString("content"), 
-								  j.getInt("is_status"), j.getLong("date_added"));
-				arr.add(p);
+			/***********************************************/
+			/***********************************************/
+			/***** RETRIEVE FRIENDS AND SUBSCRIPTIONS ******/
+			/***********************************************/
+			/***********************************************/
+			ArrayList<ArrayList<String>> allFriends =
+									FriendController.listFriends(email);
+			ArrayList<String> friends = new ArrayList<String>();
+			if(allFriends != null) {
+				friends = allFriends.get(0);
 			}
-			return arr;
+			
+			ArrayList<String> subscriptions = SubscriptionController.listSubscriptions(email);
+			
+			/***********************************************/
+			/***********************************************/
+			/********* RETRIEVE ALL RELATED POSTS **********/
+			/***********************************************/
+			/***********************************************/
+			ArrayList<Post> posts = new ArrayList<Post>();
+			for(int i = 0; i < friends.size(); i++) {
+				ArrayList<Post> friendPosts = showPosts(email,friends.get(i));
+				for(int j = 0; j < friendPosts.size(); j++) {
+					posts.add(friendPosts.get(j));
+				}
+			}
+			
+			for(int i = 0; i < subscriptions.size(); i++) {
+				ArrayList<Post> subPosts = showPosts(email, subscriptions.get(i));
+				for(int j = 0; j < subPosts.size(); j++) {
+					posts.add(subPosts.get(j));
+				}
+			}
+			
+			/***********************************************/
+			/***********************************************/
+			/********* SORT POSTS AND GRAB ONLY TEN ********/
+			/***********************************************/
+			/***********************************************/
+			Collections.sort(posts,new PostComparable());			
+			
+			ArrayList<Post> ret = new ArrayList<Post>(10);
+			
+			for(int i = 0; i < 10 && i < posts.size(); i++) {
+				ret.add(posts.get(i));
+			}
+			
+			return ret;
 		}
 		catch (Exception e){
 			// TODO Auto-generated catch block

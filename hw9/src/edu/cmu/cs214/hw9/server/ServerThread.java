@@ -213,19 +213,6 @@ public class ServerThread extends Thread {
 					String message = myWriter.toString();
 					out.println("SUCCESS " + message);
 				}
-				else if(msg.indexOf("SHOWNEWSFEED") == 0) {
-					JSONArray friends = f.listFriends(msg.substring(13));
-					JSONArray subscriptions = s.listSubscriptions(msg.substring(13));
-					
-					ArrayList<Post> ret = p.getNewsFeed(msg.substring(13), friends, subscriptions);
-					
-					JSONArray arr = p.convertToJSONArray(ret);
-					
-					StringWriter myWriter = new StringWriter();
-					arr.write(myWriter);
-					String message = myWriter.toString();
-					out.println(message);
-				}
 				
 				/***********************************/
 				/***********************************/
