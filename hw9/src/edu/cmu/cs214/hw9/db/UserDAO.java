@@ -57,10 +57,8 @@ public class UserDAO extends SQLiteAdapter {
 			String statement = "SELECT * FROM " + Constants.USERS_TABLE + " WHERE email=?;";
 			PreparedStatement ps = conn.prepareStatement(statement);
 			ps.setString(1, email);
-			System.out.println(email + " in userDAO.java");
 			rs = ps.executeQuery();
 			if(!rs.isBeforeFirst()) {
-				System.out.println("user not found in database (in User.DAO.java)");
 				return null;
 			}
 			ret = new User(rs.getString("email"), rs.getString("password"), rs.getString("name"));

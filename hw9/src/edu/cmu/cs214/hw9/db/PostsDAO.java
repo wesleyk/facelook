@@ -44,7 +44,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******** CACHE CHECK ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE CHECK in topTenPostsByEmail");
 		CacheKey myKey = new CacheKey(email, true);
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
@@ -93,8 +92,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******** CACHE STORE ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE STORE in topTenPostsByEmail");
-		
 		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
 			cache.put(myKey, ret);
@@ -122,7 +119,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******** CACHE CHECK ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE CHECK in topTenNotificationsByEmail");
 		CacheKey myKey = new CacheKey(email, false); //false = just get notifications
 		ArrayList<Post> retPosts = cache.get(myKey);
 		if(retPosts != null){
@@ -170,7 +166,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******** CACHE STORE ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE STORE in topTenNotificationsByEmail");
 		//put posts in cache. The LinkedHashMap takes care of LRU policy.
 		if(ret != null){
 			cache.put(myKey, ret);
@@ -203,7 +198,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******** CACHE CHECK ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE CHECK in createPost");
 		CacheKey subKey = new CacheKey(email, false);
 		CacheKey friendKey = new CacheKey(email, true);
 		
@@ -243,7 +237,6 @@ public class PostsDAO extends SQLiteAdapter {
 		/******* CACHE UPDATE ********/
 		/*****************************/
 		/*****************************/
-		System.out.println("CACHE UPDATE in createPost");
 		//update subscription aspect of cache
 		
 		//case where there was no entry to begin with
