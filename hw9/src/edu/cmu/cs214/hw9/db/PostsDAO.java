@@ -58,12 +58,10 @@ public class PostsDAO extends SQLiteAdapter {
 		ResultSet rs = null;
 		try {
 			String statement = "SELECT * FROM " + Constants.POSTS_TABLE + " WHERE email=? ORDER BY date_added DESC LIMIT 10;";
-			System.out.println(statement);
 			PreparedStatement ps = conn.prepareStatement(statement);
 			ps.setString(1, email);
 			rs = ps.executeQuery();
 			if(!rs.isBeforeFirst()) {
-				System.out.println("no posts by user with email " + email + "(in PostsDAO.java)");
 				return ret;
 			}
 			while (rs.next()){
@@ -137,14 +135,12 @@ public class PostsDAO extends SQLiteAdapter {
 			ps.setString(1, email);
 			rs = ps.executeQuery();
 			if(!rs.isBeforeFirst()) {
-				System.out.println("no posts by user with email " + email + "(in PostsDAO.java)");
 				return ret;
 			}
 			while (rs.next()){
 				ret.add(new Post(rs.getString("email"), rs.getString("content"),
 								rs.getInt("is_status"), rs.getLong("date_added")));
-			}
-			
+			}			
 		}
 		catch (Exception e){
 			System.out.println("Error in postsDAO.java topTenNotificationsByEmail method");
@@ -189,7 +185,6 @@ public class PostsDAO extends SQLiteAdapter {
 	 */
 	public boolean createPost (String email, String content, int is_status, long date_added){
 		if (!(is_status == 0 || is_status ==1)){
-			System.out.println("IS_STATUS CANNOT BE ANYTHING OTHER THAN 0 OR 1!");
 			return false;
 		}
 		
