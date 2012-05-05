@@ -142,7 +142,6 @@ public class NewsFeedPanel extends JPanel {
 		for (Post p : arr){
 			Date d = new Date(p.getDateAdded()*1000);
 			StatusPost sp = new StatusPost(p.getEmail(), d, p.getContent());
-			System.out.println(p.getContent());
 			stArr.add(sp);
 			panel.add(sp);
 		}

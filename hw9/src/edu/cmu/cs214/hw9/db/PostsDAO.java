@@ -199,12 +199,12 @@ public class PostsDAO extends SQLiteAdapter {
 		ArrayList<Post> subCache = null;
 		ArrayList<Post> friendCache = null;
 		
-		subCache = cache.get(subKey);
-		
-		if(is_status == 1) {
-			friendCache = cache.get(friendKey);
+		if(is_status == 0) {
+			subCache = cache.get(subKey);
 		}
 		
+		friendCache = cache.get(friendKey);
+			
 		/*****************************/
 		/*****************************/
 		/****** END CACHE CHECK ******/
@@ -234,50 +234,49 @@ public class PostsDAO extends SQLiteAdapter {
 		/*****************************/
 		//update subscription aspect of cache
 		
-		//case where there was no entry to begin with
-		if(subCache == null) {
-			ArrayList<Post> store = new ArrayList<Post>();
-			store.add(newPost);
-			cache.put(subKey, store);
-		}
-		
-		//otherwise, modify existing array list
-		else {
-			//if the list already has 10 elements,
-			// then remove the last element
-			if(subCache.size() == Constants.MAX_POSTS) {
-				subCache.remove(Constants.MAX_POSTS-1);
-			}
-			
-			//add the new element to the front of the list
-			subCache.add(0,newPost);
-			cache.put(subKey, subCache);
-		}
-		
-		//update friend aspect of cache
-		if(is_status == 1) {
-			
+		if(is_status == 0) {
 			//case where there was no entry to begin with
-			if(friendCache == null) {
+			if(subCache == null) {
 				ArrayList<Post> store = new ArrayList<Post>();
 				store.add(newPost);
-				cache.put(friendKey, store);
+				cache.put(subKey, store);
 			}
 			
 			//otherwise, modify existing array list
 			else {
 				//if the list already has 10 elements,
 				// then remove the last element
-				if(friendCache.size() == Constants.MAX_POSTS) {
-					friendCache.remove(Constants.MAX_POSTS-1);
+				if(subCache.size() == Constants.MAX_POSTS) {
+					subCache.remove(Constants.MAX_POSTS-1);
 				}
 				
 				//add the new element to the front of the list
-				friendCache.add(0,newPost);
-				cache.put(friendKey, friendCache);
+				subCache.add(0,newPost);
+				cache.put(subKey, subCache);
 			}
 		}
 		
+		//update friend aspect of cache			
+		
+		//case where there was no entry to begin with
+		if(friendCache == null) {
+			ArrayList<Post> store = new ArrayList<Post>();
+			store.add(newPost);
+			cache.put(friendKey, store);
+		}
+		
+		//otherwise, modify existing array list
+		else {
+			//if the list already has 10 elements,
+			// then remove the last element
+			if(friendCache.size() == Constants.MAX_POSTS) {
+				friendCache.remove(Constants.MAX_POSTS-1);
+			}
+			
+			//add the new element to the front of the list
+			friendCache.add(0,newPost);
+			cache.put(friendKey, friendCache);
+		}
 		
 		/*****************************/
 		/*****************************/

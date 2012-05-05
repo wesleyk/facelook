@@ -137,7 +137,7 @@ public class PostController {
 				return arr;
 			}
 			else{
-				// the two users are subscribers, show statuses only
+				// the two users are subscribers, show notifications only
 				
 				// add data needed to the JSONWriter
 				jsonW.key("email");//key
