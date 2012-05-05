@@ -57,6 +57,10 @@ public class CacheKey {
 	 */
 	@Override
 	public boolean equals(Object o) {
+		if(o == null || !(o instanceof CacheKey)) {
+			return false;
+		}
+		
 		CacheKey other = (CacheKey) o;
 		return (email.equals(other.getEmail()) &&
 				(isFriend == other.getIsFriend()));
